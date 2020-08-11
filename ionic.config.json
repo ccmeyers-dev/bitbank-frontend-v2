@@ -1,0 +1,7 @@
+{
+  "name": "bitbank",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
