@@ -61,7 +61,7 @@ const More: React.FC<Prop> = ({ toggle }) => {
                 <IonIcon icon={logoBitcoin} />
                 <h3>It's a new type of investment</h3>
                 <p>
-                  People are buying Bitcoin beacuse it is like digital gold. It
+                  People are buying Bitcoin because it is like digital gold. It
                   is used as an alternative store of wealth, for portfolio
                   diversification, passive income and a long term investment
                 </p>
@@ -72,7 +72,7 @@ const More: React.FC<Prop> = ({ toggle }) => {
                 <IonIcon icon={cashOutline} />
                 <h3>It's true financial freedom</h3>
                 <p>
-                  Like the internet, no sinle entity controls Bitcoin. It
+                  Like the internet, no single entity controls Bitcoin. It
                   provides users with both transparency and privacy. It puts you
                   back in control of your money
                 </p>
