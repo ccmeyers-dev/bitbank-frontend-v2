@@ -1,0 +1,33 @@
+@import "../../../theme/mixins";
+
+.ThemeSelector {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+
+  ion-list-header {
+    h1 {
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+
+  ion-list {
+    ion-item {
+      padding: 12px 11px;
+      ion-text {
+        @include flex(space-between);
+      }
+      h3 {
+        padding-left: 16px;
+        font-weight: 400;
+        font-size: 16px;
+      }
+    }
+  }
+}

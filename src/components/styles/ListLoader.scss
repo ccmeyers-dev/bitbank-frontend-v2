@@ -1,0 +1,18 @@
+@import "../../theme/mixins";
+
+.LoadingList {
+  margin-top: 36px;
+  text-align: center;
+}
+.ErrorList {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  p {
+    font-size: 16px;
+  }
+}

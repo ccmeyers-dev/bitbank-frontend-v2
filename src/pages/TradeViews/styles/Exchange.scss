@@ -1,0 +1,106 @@
+@import "../../../theme/mixins";
+
+.Exchange {
+  .back {
+    width: 30vw;
+    .back-button {
+      font-size: 24px;
+      margin-left: 8px;
+      margin-top: 4px;
+    }
+  }
+  ion-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  ion-text {
+    text-align: center;
+    h1 {
+      @include flexOptions(center, baseline);
+      font-size: 22px;
+      margin-left: 16px;
+      margin-top: 24px;
+      p {
+        font-size: 16px;
+        margin-left: 8px;
+        color: gray;
+      }
+    }
+    & > p {
+      color: rgb(238, 123, 123);
+      font-size: 12px;
+      margin-bottom: 48px;
+      margin-top: 0;
+    }
+  }
+  .chart {
+    max-height: 50vh;
+  }
+
+  .copy-trade {
+    padding: 24px 16px;
+    h2 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .summary {
+      @include flex(space-between);
+      & > p {
+        font-size: 14px;
+        max-width: 50vw;
+        font-weight: 450;
+      }
+      ion-button {
+        --border-radius: 8px;
+        margin-top: 0;
+        p {
+          padding: 0 12px;
+        }
+      }
+    }
+  }
+  .footer {
+    padding: 0 16px;
+    .balance {
+      @include flex(space-between);
+      margin-bottom: 12px;
+      .coin {
+        @include flex(space-between);
+        ion-avatar {
+          margin-right: 12px;
+          padding: 4px;
+          width: 36px;
+          height: 36px;
+        }
+        p {
+          font-weight: 450;
+        }
+      }
+      .amount {
+        text-align: right;
+        .main {
+          font-size: 14px;
+          font-weight: 550;
+          margin: 0;
+        }
+        .sub {
+          font-size: 12px;
+          font-weight: 500;
+          color: gray;
+          margin: 0;
+        }
+      }
+    }
+    .buy-sell {
+      @include flex(space-between);
+      ion-button {
+        --background: rgb(36, 76, 255);
+        --border-radius: 4px;
+        width: 44vw;
+        p {
+          color: white;
+        }
+      }
+    }
+  }
+}

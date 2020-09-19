@@ -1,0 +1,29 @@
+.WalletItem {
+  margin: 8px 0 16px;
+  padding-bottom: 4px;
+  --background-activated: rgba(0, 0, 0, 0);
+  ion-thumbnail {
+    margin-left: 8px;
+    margin-right: 16px;
+    padding: 4px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+  .coin-label {
+    margin: 0;
+    h3 {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    h5 {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    h4 {
+      font-weight: 500;
+      font-size: 13px;
+      color: rgb(172, 172, 172);
+    }
+  }
+}

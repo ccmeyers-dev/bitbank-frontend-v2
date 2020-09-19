@@ -1,0 +1,12 @@
+@import "../../theme/mixins";
+
+.NumberInput {
+  cursor: pointer;
+  ion-row {
+    ion-col {
+      @include flex(center);
+      padding: 24px;
+      font-size: 28px;
+    }
+  }
+}

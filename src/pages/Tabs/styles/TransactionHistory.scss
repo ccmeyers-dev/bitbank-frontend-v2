@@ -1,0 +1,113 @@
+@import "../../../theme/mixins";
+
+.TransactionHistory {
+  ion-list-header {
+    h1 {
+      margin-top: 24px;
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+  .WalletHeader {
+    background-color: rgb(78, 78, 78);
+    ion-item {
+      .icon {
+        @include flex(center);
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        border-radius: 50%;
+        background-color: rgba(125, 161, 238, 0.493);
+        ion-icon {
+          font-size: 20px;
+        }
+      }
+    }
+    .description {
+      text-align: left;
+      h3 {
+        font-weight: 600;
+        font-size: 17px;
+      }
+      p {
+        font-weight: 500;
+        font-size: 12px;
+      }
+    }
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+  ion-list {
+    margin-top: 12px;
+  }
+  .no-result {
+    text-align: center;
+    h3 {
+      margin-top: 64px;
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+.wallet-selector {
+  ion-toolbar {
+    ion-title {
+      font-weight: 500;
+      font-size: 18px;
+    }
+    .back-button {
+      font-size: 24px;
+      margin-right: 12px;
+      color: rgba(138, 138, 138, 0.5);
+    }
+  }
+  ion-content {
+    ion-list {
+      padding-top: 24px;
+
+      ion-item {
+        --background: $bg;
+        --border-color: rgba(194, 194, 194, 0.205);
+        padding: 0 12px;
+        margin: 8px 0;
+        .icon {
+          @include flex(center);
+          width: 40px;
+          height: 40px;
+          margin-right: 12px;
+          border-radius: 50%;
+          img {
+            width: 32px;
+          }
+        }
+        .description {
+          text-align: left;
+          h3 {
+            font-weight: 600;
+            font-size: 16px;
+          }
+          p {
+            font-weight: 500;
+            font-size: 12px;
+          }
+        }
+        .amount {
+          text-align: right;
+          margin: 0;
+          h5,
+          p {
+            font-size: 14px;
+            font-weight: 600;
+          }
+          p {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+@import "../../../theme/mixins";
+
+.Withdraw {
+  .back-button {
+    margin-top: 0px;
+    padding: 6px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+  ion-segment {
+    margin-top: 12px;
+  }
+  .balance {
+    @include flex(flex-end);
+    font-size: 12px;
+    font-weight: 600;
+    margin: 4px 4px 0;
+    p {
+      background-color: rgba(185, 185, 185, 0.171);
+      padding: 6px;
+      border-radius: 8px;
+      span {
+        margin-left: 8px;
+      }
+    }
+  }
+  .search-box {
+    padding: 24px 12px;
+    padding-top: 0;
+    ion-input {
+      --background: rgba(185, 185, 185, 0.171);
+      border-radius: 48px;
+      margin: 12px auto;
+      --padding-top: 20px;
+      --padding-bottom: 20px;
+      --padding-start: 20px;
+      --placeholder-font-weight: 500;
+    }
+  }
+  .no-result {
+    text-align: center;
+    h3 {
+      margin-top: 64px;
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .button {
+    @include flex(center);
+    margin-bottom: 12px;
+    ion-button {
+      width: 60%;
+      --border-radius: 24px;
+      ion-icon {
+        font-size: 18px;
+        margin-left: 8px;
+        margin-top: 2px;
+      }
+      &.close {
+        ion-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+  .detail {
+    $bg: rgba(153, 153, 153, 0.151);
+    text-align: center;
+    h5 {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .outstanding {
+      background-color: $bg;
+      border-radius: 12px;
+      margin: 12px 0;
+      .entry {
+        padding: 0 16px;
+        @include flex(space-between);
+        h5 {
+          font-weight: 500;
+          font-size: 14px;
+          opacity: 0.7;
+          text-transform: capitalize;
+          ion-icon {
+            font-size: 12px;
+            margin-left: 4px;
+            color: rgb(73, 155, 248);
+          }
+        }
+        p {
+          font-weight: 500;
+          font-size: 13px;
+          color: rgb(73, 155, 248);
+        }
+      }
+      .empty {
+        h5 {
+          color: rgb(73, 155, 248);
+          font-weight: 600;
+          font-size: 13px;
+          padding: 24px 0;
+        }
+      }
+    }
+    .status {
+      background-color: $bg;
+      border-radius: 12px;
+      margin: 12px 0;
+      .entry {
+        padding: 0 8px;
+        @include flex(space-between);
+        h5 {
+          font-weight: 600;
+          font-size: 14px;
+        }
+        p {
+          font-size: 13px;
+          font-weight: 500;
+          opacity: 0.7;
+        }
+        ion-icon {
+          font-size: 24px;
+          margin-right: 12px;
+          color: rgb(247, 72, 49);
+        }
+        &.completed {
+          ion-icon {
+            color: rgb(37, 207, 108);
+          }
+        }
+      }
+    }
+  }
+  .success-card {
+    background-color: rgba(153, 153, 153, 0.151);
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    padding: 1px 0;
+    h3 {
+      font-weight: 800;
+      font-size: 18px;
+      opacity: 0.7;
+    }
+    ion-icon {
+      font-size: 48px;
+      color: rgb(27, 145, 223);
+    }
+    p {
+      padding: 4px 0;
+      &.prompt {
+        font-weight: 600;
+        font-size: 14px;
+        opacity: 0.7;
+      }
+      &.monitor {
+        font-size: 12px;
+        color: rgb(27, 145, 223);
+      }
+    }
+  }
+}

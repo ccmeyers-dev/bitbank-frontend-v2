@@ -1,0 +1,187 @@
+@import "../../../theme/mixins";
+
+.Home {
+  // quick balance
+  .quick-balance {
+    h2 {
+      font-weight: bold;
+      font-size: 24px;
+    }
+    p {
+      font-weight: bold;
+      color: gray;
+      margin: 28px 0 16px;
+    }
+    h1 {
+      font-weight: bold;
+      font-size: 30px;
+      margin-bottom: 12px;
+      ion-spinner {
+        margin-left: 24px;
+      }
+    }
+  }
+  //shortcuts
+  .shortcuts {
+    border-radius: 8px;
+    margin-bottom: 24px;
+    ion-item {
+      padding-left: 8px;
+      --detail-icon-color: rgb(194, 194, 194);
+      --border-color: rgba(194, 194, 194, 0.205);
+      h2 {
+        font-size: 18px;
+        font-weight: 550;
+        margin-bottom: 8px;
+        opacity: 0.95;
+      }
+    }
+  }
+
+  .pending {
+    p {
+      font-weight: bold;
+      margin: 24px 8px 16px;
+      color: rgb(77, 137, 248);
+    }
+  }
+  // welcome text
+  .welcome-message {
+    margin-bottom: 24px;
+    .icon-cover {
+      @include flex(Center);
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: rgba(255, 187, 0, 0.733);
+      ion-icon {
+        font-size: 22px;
+        color: white;
+      }
+    }
+    ion-text {
+      p {
+        font-size: 15px;
+        margin: 0 0 26px;
+        color: gray;
+      }
+    }
+  }
+
+  // slides
+  .slide-item {
+    margin: 0 0 36px;
+    ion-card {
+      $bg: rgba(170, 170, 170, 0.1);
+      border-radius: 8px;
+      width: 100%;
+      position: relative;
+      padding: 0;
+      margin: 4px;
+      box-shadow: none;
+      background: $bg;
+
+      ion-icon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+      ion-card-content {
+        ion-item {
+          --background: $bg;
+          --background-activated: $bg;
+          --border-color: rgba(194, 194, 194, 0.205);
+          ion-avatar {
+            width: 100px;
+            height: 100px;
+            margin-right: 24px;
+            padding-top: 16px;
+          }
+          ion-text {
+            h3 {
+              font-weight: bold;
+              font-size: 16px;
+              margin-bottom: 6px;
+            }
+            p {
+              opacity: 0.5;
+            }
+          }
+        }
+
+        ion-router-link {
+          text-align: center;
+          font-size: 14px;
+          font-weight: 500;
+          p {
+            margin: 0;
+            margin-top: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  // coin list
+  ion-list-header {
+    padding: 0;
+    p {
+      font-weight: bold;
+    }
+    ion-badge {
+      font-size: 10px;
+      padding: 5px 16px;
+      border-radius: 18px;
+      background-color: rgba(112, 112, 112, 0.068);
+      color: rgba(128, 128, 128, 0.63);
+      margin-bottom: 4px;
+    }
+  }
+
+  .exchanges {
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 12px;
+    ion-item {
+      --inner-padding-end: 4px;
+      --detail-icon-color: rgb(192, 192, 192);
+      --background-activated: rgba(0, 0, 0, 0);
+      padding-left: 8px;
+      margin: 6px 0;
+      ion-avatar {
+        width: 36px;
+        height: 36px;
+      }
+      ion-badge {
+        font-size: 13px;
+        border-radius: 24px;
+        padding: 4px 8px;
+        margin-top: 2px;
+        &.low {
+          color: rgb(241, 105, 105);
+          background-color: rgba(245, 104, 104, 0.151);
+        }
+        &.high {
+          color: rgb(22, 206, 160);
+          background-color: rgba(28, 207, 133, 0.096);
+        }
+      }
+      .coin-label {
+        h3 {
+          font-weight: 600;
+          font-size: 16px;
+        }
+        p {
+          opacity: 0.5;
+        }
+      }
+      .coin-price {
+        p {
+          font-weight: 650;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

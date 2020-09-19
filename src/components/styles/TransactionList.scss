@@ -1,0 +1,42 @@
+@import "../../theme/mixins.scss";
+
+.TransactionList {
+  ion-item {
+    padding: 4px;
+    @include flex(space-between);
+    .description {
+      .currency {
+        font-weight: bold;
+        font-size: 16px;
+        display: inline;
+      }
+      .order {
+        color: rgb(48, 184, 94);
+        display: inline;
+        font-size: 15px;
+        &.sell {
+          color: red;
+        }
+        &.smart {
+          color: rgb(27, 132, 253);
+        }
+      }
+      p {
+        font-weight: 500;
+        font-size: 14px;
+        margin: 0;
+        color: gray;
+      }
+    }
+    .amount {
+      margin: auto;
+      margin-right: 0;
+      h5 {
+        font-size: 20px;
+        color: rgb(42, 184, 94);
+        font-weight: bold;
+        margin: 0;
+      }
+    }
+  }
+}

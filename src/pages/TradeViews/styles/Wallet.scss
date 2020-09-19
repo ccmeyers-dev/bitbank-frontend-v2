@@ -1,0 +1,83 @@
+@import "../../../theme/mixins";
+
+.Wallet {
+  .back {
+    width: 30vw;
+    .back-button {
+      font-size: 24px;
+      margin-left: 8px;
+      margin-top: 4px;
+    }
+  }
+
+  ion-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .qr-code {
+    font-size: 22px;
+    margin-right: 12px;
+  }
+  ion-text {
+    text-align: center;
+    h1 {
+      @include flexOptions(center, baseline);
+      font-size: 22px;
+      margin-top: 32px;
+      margin-bottom: 0;
+      p {
+        font-size: 16px;
+        margin-left: 8px;
+        color: gray;
+      }
+    }
+    & > p {
+      color: gray;
+      font-size: 14px;
+      margin-bottom: 48px;
+      margin-top: 0;
+    }
+  }
+  .buttons {
+    padding: 0 8px;
+    margin-bottom: 24px;
+    .buy-sell {
+      @include flex(space-between);
+      ion-button {
+        --background: rgb(36, 76, 255);
+        --border-radius: 4px;
+        width: 45vw;
+      }
+      &.btc {
+        ion-button {
+          --background: rgb(255, 142, 36);
+        }
+      }
+      &.eth {
+        ion-button {
+          --background: rgb(102, 60, 201);
+        }
+      }
+      &.ltc {
+        ion-button {
+          --background: rgb(107, 99, 117);
+        }
+      }
+      &.xrp {
+        ion-button {
+          --background: rgb(0, 96, 151);
+        }
+      }
+    }
+  }
+  .no-result {
+    text-align: center;
+    h3 {
+      margin-top: 64px;
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}

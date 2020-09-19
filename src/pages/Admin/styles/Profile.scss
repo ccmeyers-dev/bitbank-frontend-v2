@@ -1,0 +1,118 @@
+@import "../../../theme/mixins";
+
+.AdminProfile {
+  .back {
+    width: 30vw;
+    .back-button {
+      font-size: 24px;
+      margin-left: 8px;
+      margin-top: 4px;
+      color: var(--ion-text-color, black);
+    }
+  }
+  ion-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .body {
+    background-color: rgba(144, 145, 170, 0.123);
+    height: 100%;
+
+    .header {
+      @include flex(center);
+      flex-direction: column;
+      padding: 24px;
+      .avatar {
+        background-color: rgba(64, 68, 87, 0.575);
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+        @include flex(center);
+        h1 {
+          font-size: 32px;
+          margin: 0;
+          color: white;
+          font-weight: 500;
+        }
+      }
+      h1 {
+        margin: 16px auto 0;
+        font-weight: 500;
+        font-size: 22px;
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.6;
+        span {
+          font-size: 12px;
+        }
+      }
+    }
+    .details {
+      margin-bottom: 32px;
+      ion-item {
+        padding: 0 12px;
+        h2 {
+          font-size: 15px;
+        }
+        .id h3 {
+          opacity: 0.6;
+          font-size: 14px;
+        }
+        .balance h3 {
+          opacity: 0.8;
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+    .actions {
+      margin-bottom: 32px;
+      ion-item {
+        padding: 0 12px;
+        h2 {
+          font-size: 15px;
+        }
+        .expert {
+          h3 {
+            font-weight: 600;
+            opacity: 0.8;
+            font-size: 14px;
+          }
+          .enabled {
+            opacity: 1;
+            color: rgb(42, 109, 255);
+          }
+        }
+      }
+    }
+    .options {
+      margin-bottom: 32px;
+      ion-item {
+        --padding-top: 0;
+        text-align: center;
+        color: rgb(245, 53, 53);
+      }
+    }
+    .more {
+      margin-bottom: 32px;
+      ion-item {
+        text-align: center;
+        color: rgb(35, 155, 192);
+      }
+    }
+  }
+}
+
+.delete-user-alert {
+  .delete {
+    color: rgb(241, 85, 85);
+  }
+}
+
+.make-admin-alert {
+  .admin {
+    color: rgb(34, 170, 211);
+  }
+}

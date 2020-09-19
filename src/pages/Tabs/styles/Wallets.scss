@@ -1,0 +1,42 @@
+@import "../../../theme/mixins";
+
+.Wallets {
+  //icon
+  .icon {
+    font-size: 28px;
+    color: lightgray;
+    float: right;
+    text-align: center;
+  }
+
+  // coin list
+
+  ion-list-header {
+    h1 {
+      margin-top: 0px;
+      font-weight: bold;
+      font-size: 24px;
+    }
+  }
+
+  ion-list {
+    border-radius: 8px;
+  }
+
+  .scan-button {
+    @include flex(center);
+    ion-button {
+      --background: rgba(71, 31, 252, 0.623);
+      height: 42px;
+      position: absolute;
+      bottom: 4px;
+      margin: 20px auto;
+      border-radius: 30px;
+      font-size: 14px;
+    }
+  }
+
+  ion-modal {
+    --max-height: 80px;
+  }
+}

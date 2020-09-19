@@ -1,0 +1,86 @@
+@import "../../../theme/mixins";
+
+.UserProfile {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+
+  .body {
+    background-color: rgba(144, 145, 170, 0.123);
+    height: 100%;
+    margin-top: 12px;
+
+    .header {
+      @include flex(center);
+      flex-direction: column;
+      padding: 24px;
+      .avatar {
+        background-color: rgba(64, 68, 87, 0.575);
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+        @include flex(center);
+        h1 {
+          font-size: 32px;
+          margin: 0;
+          color: white;
+          font-weight: 500;
+        }
+      }
+      h1 {
+        margin: 16px auto 0;
+        font-weight: 500;
+        font-size: 22px;
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.6;
+        span {
+          font-size: 12px;
+        }
+      }
+    }
+    .details {
+      margin-bottom: 32px;
+      ion-item {
+        padding: 0 12px;
+        h2 {
+          font-size: 15px;
+        }
+        h3 {
+          font-size: 14px;
+        }
+        .id h3 {
+          opacity: 0.6;
+          font-size: 14px;
+        }
+        .score h3 {
+          opacity: 0.6;
+          color: rgb(45, 142, 253);
+        }
+        .balance h3 {
+          opacity: 0.8;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .more {
+      margin-bottom: 32px;
+      ion-item {
+        text-align: center;
+        color: rgb(35, 155, 192);
+        h2 {
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

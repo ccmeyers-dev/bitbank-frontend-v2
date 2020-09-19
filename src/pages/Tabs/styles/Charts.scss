@@ -1,0 +1,34 @@
+@import "../../../theme/mixins.scss";
+
+.Charts {
+  .back-button {
+    font-size: 24px;
+    margin-left: 8px;
+    margin-top: 4px;
+  }
+  ion-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  ion-content {
+    #market-window {
+      margin-top: 12px;
+      #candlesticks {
+        height: 72vh;
+        width: 100vw;
+      }
+    }
+    .mid-section {
+      margin: 24px auto;
+      p {
+        text-align: center;
+        font-weight: 700;
+        font-size: 12px;
+        opacity: 0.6;
+      }
+    }
+    #screener-window {
+      height: 100%;
+    }
+  }
+}

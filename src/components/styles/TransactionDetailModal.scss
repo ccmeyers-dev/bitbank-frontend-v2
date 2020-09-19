@@ -1,0 +1,26 @@
+@import "../../theme/mixins.scss";
+
+.transaction-detail-modal {
+  ion-content {
+    .details {
+      padding: 4px;
+      .entry {
+        @include flex(space-between);
+        p {
+          margin: 0 0 2px 0;
+          font-weight: bold;
+          color: rgb(110, 110, 110);
+        }
+      }
+    }
+    .positions {
+      background: rgba(136, 136, 136, 0.253);
+      padding: 4px;
+      p {
+        margin: 0;
+        font-weight: bold;
+        font-size: 14px;
+      }
+    }
+  }
+}

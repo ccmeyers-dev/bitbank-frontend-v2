@@ -1,0 +1,115 @@
+@import "../../../theme/mixins";
+
+.AdminWalletAddress {
+  .back-button {
+    margin-top: 0px;
+    padding: 6px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+    color: var(--ion-text-color, black);
+    opacity: 0.8;
+  }
+
+  ion-list-header {
+    h1 {
+      @include flex(space-between);
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+  .wallet {
+    margin: auto;
+    max-width: 570px;
+    padding: 12px 0;
+    p {
+      font-weight: 600;
+      font-size: 16px;
+      padding-left: 16px;
+    }
+    .address {
+      @include flex(space-around);
+      background-color: rgba(172, 172, 172, 0.185);
+      margin: auto;
+      margin-top: 12px;
+      padding: 0 4px;
+      border-radius: 24px;
+      p {
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: normal;
+        width: 100%;
+        text-align: left;
+        border: none;
+        background: rgba(0, 0, 0, 0);
+      }
+    }
+    ion-button {
+      margin: 12px 0;
+      height: 42px;
+      --border-radius: 24px;
+      p {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      &.Bitcoin {
+        --background: rgb(252, 143, 19);
+      }
+      &.Ethereum {
+        --background: rgb(128, 82, 236);
+      }
+      &.Litecoin {
+        --background: rgb(107, 99, 117);
+      }
+      &.Ripple {
+        --background: rgb(0, 96, 151);
+      }
+    }
+  }
+}
+
+.address-modal {
+  ion-toolbar {
+    ion-title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .back-button {
+      font-size: 24px;
+      margin-right: 12px;
+      color: rgba(138, 138, 138, 0.5);
+    }
+  }
+  ion-content {
+    .input {
+      padding: 0 12px;
+      margin: auto;
+      margin-top: 20%;
+      max-width: 375px;
+      .input-box {
+        padding: 12px 0px;
+        padding-top: 0;
+        ion-input {
+          --background: rgba(185, 185, 185, 0.171);
+          border-radius: 48px;
+          margin: 12px auto;
+          --padding-top: 16px;
+          --padding-bottom: 16px;
+          --padding-start: 20px;
+          --placeholder-font-weight: 500;
+        }
+      }
+      .button {
+        @include flex(center);
+        margin-bottom: 12px;
+        ion-button {
+          width: 100%;
+          --border-radius: 24px;
+        }
+      }
+    }
+  }
+}

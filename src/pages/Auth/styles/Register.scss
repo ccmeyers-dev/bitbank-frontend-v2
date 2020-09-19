@@ -1,0 +1,116 @@
+@import "../../../theme/mixins";
+
+.Register {
+  .form {
+    .header {
+      text-align: center;
+      ion-icon {
+        font-weight: bold;
+        font-size: 64px;
+        color: rgb(72, 39, 194);
+      }
+      h3 {
+        text-align: center;
+        font-weight: bold;
+        font-size: 24px;
+      }
+    }
+    width: 100%;
+    margin: 48px auto;
+    .form-input {
+      padding: 12px;
+      margin-top: auto;
+      ion-grid {
+        --ion-grid-padding: 0px;
+        ion-row {
+          ion-col {
+            ion-input {
+              --background: rgba(184, 184, 184, 0.212);
+              border-radius: 48px;
+              margin: 4px auto;
+              --padding-top: 16px;
+              --padding-bottom: 16px;
+              --padding-start: 16px;
+              --placeholder-font-weight: 500;
+              font-size: 14px;
+            }
+            ion-select {
+              border-radius: 48px;
+              background-color: rgba(184, 184, 184, 0.212);
+              margin: 4px auto;
+              --padding-top: 16px;
+              --padding-bottom: 16px;
+              --padding-start: 16px;
+              --padding-end: 16px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+    .error {
+      font-size: 14px;
+      font-weight: 450;
+      color: rgb(245, 109, 109);
+      text-align: center;
+      margin: 2px 0;
+    }
+    .button {
+      padding: 4px;
+      ion-button {
+        --border-radius: 28px;
+        --padding-top: 28px;
+        --padding-bottom: 28px;
+        --background: rgb(28, 26, 32);
+        --background-activated: rgb(37, 35, 41);
+        p {
+          font-size: 16px;
+          font-weight: 600;
+        }
+      }
+    }
+    .help {
+      margin-top: 24px;
+      text-align: center;
+      ion-router-link {
+        color: rgb(43, 119, 233);
+        font-weight: 600;
+      }
+    }
+    .brand {
+      text-align: center;
+      margin-top: 24px;
+      p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.6;
+      }
+      small {
+        opacity: 0.5;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+@media (min-width: 575px) {
+  .Register {
+    .form {
+      width: 80%;
+    }
+  }
+}
+@media (min-width: 768px) {
+  .Register {
+    .form {
+      width: 60%;
+    }
+  }
+}
+@media (min-width: 1024px) {
+  .Register {
+    .form {
+      width: 50%;
+    }
+  }
+}

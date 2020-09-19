@@ -1,0 +1,228 @@
+@import "../../../theme/mixins";
+
+.HomePage {
+  .home {
+    background-color: rgb(22, 28, 112);
+    margin: auto;
+    height: 100vh;
+    .head {
+      h1 {
+        margin: 0;
+        color: white;
+        padding: 16px 32px;
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+    h3 {
+      color: white;
+      margin: 48px 10vw;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .list {
+      margin: 24px auto;
+      padding: 0 24px;
+      max-width: 450px;
+      .entry {
+        display: flex;
+        align-items: center;
+        ion-icon {
+          font-size: 24px;
+          color: rgb(243, 79, 115);
+          margin-right: 12px;
+          min-width: 24px;
+        }
+        p {
+          font-size: 14px;
+          color: white;
+        }
+      }
+    }
+    .next {
+      p {
+        text-align: center;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        margin: 32px;
+      }
+    }
+    .start {
+      padding: 0 12px 48px;
+      ion-button {
+        --border-radius: 24px;
+        --padding-top: 24px;
+        --padding-bottom: 24px;
+        --background: rgb(30, 109, 255);
+      }
+    }
+  }
+  .more {
+    background-color: rgb(255, 255, 255);
+    margin: auto;
+    color: black;
+    .head {
+      @include flex(space-between);
+      h1 {
+        margin: 0;
+        color: rgb(21, 73, 214);
+        padding: 16px 32px;
+        font-size: 24px;
+        font-weight: 600;
+      }
+      ion-icon {
+        margin-right: 24px;
+        font-size: 24px;
+        color: rgb(30, 109, 255);
+      }
+    }
+    ion-slides {
+      .page {
+        margin: 12px 0 32px;
+        h3 {
+          font-size: 15px;
+          font-weight: 400;
+          margin: 0;
+          color: rgb(23, 69, 156);
+        }
+        h1 {
+          font-size: 18px;
+          margin: 0;
+          margin-top: 6px;
+          font-weight: 800;
+          color: rgb(15, 26, 189);
+        }
+      }
+    }
+    .content {
+      max-width: 700px;
+      margin: 0 auto;
+      .intro {
+        text-align: center;
+        padding: 12px;
+        h1 {
+          margin: 16px;
+          padding: 12px 32px;
+          font-size: 28px;
+          font-weight: 700;
+          span {
+            color: rgb(247, 100, 47);
+          }
+        }
+        ion-slide {
+          margin: 0 0 48px;
+          .info {
+            background-color: rgba(206, 206, 206, 0.233);
+            border-radius: 8px;
+            margin: 0 auto;
+            max-width: 700px;
+            min-height: 320px;
+            padding: 12px;
+            ion-icon {
+              margin: 12px 0;
+              font-size: 48px;
+            }
+            h3 {
+              font-size: 22px;
+              font-weight: 600;
+            }
+            p {
+              font-size: 17px;
+              font-weight: 400;
+              margin: 16px 8px;
+            }
+            &.investment {
+              ion-icon {
+                margin: 12px 0;
+                font-size: 48px;
+                color: rgb(253, 134, 22);
+              }
+            }
+            &.freedom {
+              ion-icon {
+                margin: 12px 0;
+                font-size: 48px;
+                color: rgb(19, 199, 115);
+              }
+            }
+            &.move {
+              ion-icon {
+                margin: 12px 0;
+                font-size: 48px;
+                color: rgb(22, 180, 253);
+              }
+            }
+          }
+        }
+      }
+      .header {
+        text-align: center;
+        padding: 12px;
+        h3 {
+          margin: 16px;
+          padding: 12px 32px;
+          font-size: 28px;
+          font-weight: 700;
+          span {
+            color: rgb(243, 29, 47);
+          }
+        }
+      }
+      .steps {
+        padding: 12px;
+        .item {
+          margin: 32px 0;
+          .title {
+            padding-left: 12px;
+            h1 {
+              font-size: 18px;
+              font-weight: 700;
+              color: rgb(15, 58, 151);
+            }
+          }
+          .body {
+            padding-left: 12px;
+            font-size: 16px;
+            color: rgb(104, 104, 104);
+          }
+        }
+      }
+      .back {
+        padding: 0 12px 48px;
+        ion-button {
+          --border-radius: 24px;
+          --padding-top: 24px;
+          --padding-bottom: 24px;
+          --background: rgb(255, 101, 121);
+        }
+      }
+    }
+  }
+}
+
+// @media (min-width: 575px) {
+//   .HomePage {
+//     .home,
+//     .more {
+//       width: 80%;
+//     }
+//   }
+// }
+// @media (min-width: 768px) {
+//   .HomePage {
+//     .home,
+//     .more {
+//       width: 60%;
+//     }
+//   }
+// }
+// @media (min-width: 1024px) {
+//   .HomePage {
+//     .home,
+//     .more {
+//       width: 50%;
+//     }
+//   }
+// }

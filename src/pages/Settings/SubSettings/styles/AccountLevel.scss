@@ -1,0 +1,62 @@
+@import "../../../../theme/mixins";
+
+.AccountLevel {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+
+  ion-list-header {
+    h1 {
+      @include flex(space-between);
+      font-weight: bold;
+      font-size: 22px;
+      ion-icon {
+        position: absolute;
+        right: 24px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  }
+  .levels {
+    padding: 16px;
+    .level {
+      background-color: rgba(104, 104, 104, 0.103);
+      padding: 4px 8px;
+      margin: 16px 0px;
+      border-radius: 12px;
+      border: 1.5px #4060a3 solid;
+
+      h3 {
+        font-size: 17px;
+        font-weight: 600;
+        ion-icon {
+          margin-left: 4px;
+        }
+      }
+      p {
+        font-size: 14px;
+      }
+      &.false {
+        border: 1px #a2a8a4 solid;
+        h3 {
+          color: rgb(139, 139, 139);
+        }
+        p {
+          color: rgba(139, 139, 139, 0.548);
+        }
+      }
+      &.silver {
+        border: 1px #02ce91 solid;
+      }
+      &.gold {
+        border: 1px #e2de0e solid;
+      }
+    }
+  }
+}
