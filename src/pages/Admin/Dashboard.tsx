@@ -73,7 +73,9 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // console.log("fetching users...");
     axiosInstance
-      .get("users/portfolios/")
+      .get("users/portfolios/", {
+        timeout: 20000,
+      })
       .then((res) => {
         let results;
         // console.log(res.data);

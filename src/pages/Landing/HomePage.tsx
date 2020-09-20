@@ -149,9 +149,10 @@ const Home: React.FC<Prop> = ({ toggle }) => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://ip-api.com/json")
+      .get("https://ipapi.co/country_name/")
       .then((res) => {
-        setCountry(res.data.country);
+        // console.log(res.data);
+        setCountry(res.data);
         setLoading(false);
       })
       .catch((err) => {

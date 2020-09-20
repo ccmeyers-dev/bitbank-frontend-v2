@@ -54,11 +54,21 @@ const Register: React.FC = () => {
     let valid = true;
     let formErrors: ErrorProp = initialError;
 
+    const pwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
+
     // handle inconsistent fields
+    if (pwd.test(password) === false) {
+      formErrors = {
+        ...formErrors,
+        password:
+          "Password should contain at least an Upper case character, a Lower case character and a Number",
+      };
+      valid = false;
+    }
     if (password.length < 8) {
       formErrors = {
         ...formErrors,
-        password: "Password too short, choose a more secure password",
+        password: "Password too short, should be at least 8 charaters",
       };
       valid = false;
     }
@@ -121,20 +131,14 @@ const Register: React.FC = () => {
 
     if (isValid) {
       axiosInstance
-        .post(
-          "auth/user/create/",
-          {
-            email: email.toLowerCase(),
-            first_name: firstName,
-            last_name: lastName,
-            region: region,
-            gender: gender,
-            password: password,
-          },
-          {
-            timeout: 10000,
-          }
-        )
+        .post("auth/user/create/", {
+          email: email.toLowerCase(),
+          first_name: firstName,
+          last_name: lastName,
+          region: region,
+          gender: gender,
+          password: password,
+        })
         .then((res) => {
           // console.log(res.data);
           localStorage.setItem("visited", "true");
