@@ -25,10 +25,12 @@ import Refresher from "../../components/utils/Refresher";
 import "./styles/Withdraw.scss";
 import { HistoryIconSelector } from "../../components/utils/Utils";
 import axiosInstance from "../../services/baseApi";
-import { useProfile } from "../../Context/ProfileContext";
-import { useWallets } from "../../Context/WalletContext";
-import { useCoinValue } from "../../Context/Hooks/CoinValueHook";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
+import { useCoinValue } from "../../Hooks/CoinValueHook";
+import { LoadingList } from "../../components/ListLoader";
+import { useParams } from "react-router";
+import { useWallets } from "../../Hooks/WalletsHook";
+import { useProfile } from "../../Hooks/ProfileHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 interface WithdrawalItemProp {
   id: number;
@@ -171,6 +173,7 @@ interface ActionProp {
   request: () => void;
   valid: boolean;
   wallet: string;
+  loading: boolean;
 }
 const ActionButton: React.FC<ActionProp> = ({
   show,
@@ -179,6 +182,7 @@ const ActionButton: React.FC<ActionProp> = ({
   requested,
   valid,
   wallet,
+  loading,
 }) => {
   return (
     <div className="button">
@@ -188,6 +192,7 @@ const ActionButton: React.FC<ActionProp> = ({
           color="medium"
           className="close"
           onClick={closeDetail}
+          disabled={false}
         >
           <IonIcon icon={arrowBack} />
           <p>Back</p>
@@ -196,11 +201,17 @@ const ActionButton: React.FC<ActionProp> = ({
         <IonButton disabled={valid ? false : true} mode="ios" onClick={request}>
           {requested ? (
             <p>Ok</p>
+          ) : valid ? (
+            loading ? (
+              <p>Processing...</p>
+            ) : (
+              <>
+                <p>Withdraw {wallet}</p>
+                <IonIcon icon={arrowForward} />
+              </>
+            )
           ) : (
-            <>
-              <p>{valid ? `Withdraw ${wallet}` : "Insufficient Funds"}</p>
-              <IonIcon icon={arrowForward} />
-            </>
+            <p>Insufficient Funds</p>
           )}
         </IonButton>
       )}
@@ -216,11 +227,13 @@ const SuccessCard: React.FC<SuccessCardProp> = ({ responseAmount }) => {
     <div className="success-card">
       <h3>
         Request successful <br />
+        <br />
         {responseAmount} USD
       </h3>
       <IonIcon icon={checkmarkDoneOutline} />
       <p className="prompt">
-        You would be prompted to add your bank details after confirmation <br />
+        You would be prompted to add your withdrawal details after confirmation{" "}
+        <br />
         Please do not resend withdrawal request.
       </p>
       <p className="monitor">Monitor your withdrawal below</p>
@@ -234,22 +247,24 @@ const Withdraw: React.FC = () => {
   const [detail, setDetail] = useState<WithdrawalDetailProp | any>({});
   const [showDetail, setShowDetail] = useState(false);
   const [requested, setRequested] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [wallet, setWallet] = useState("BTC");
+  const [selectedWallet, setSelectedWallet] = useState<any>();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [withdrawals, setWithdrawals] = useState([]);
+  // const [withdrawals, setWithdrawals] = useState([]);
 
   const { goBack } = useContext(NavContext);
 
-  const {
-    profile,
-    loading: loadingProfile,
-    error: errorProfile,
-  } = useProfile();
+  const { symbol } = useParams();
+
+  const { data: profile } = useProfile();
+  const { data: wallets } = useWallets();
+  const { data: allWithdrawals, update } = useSecureRequest(
+    "/users/withdrawals/"
+  );
 
   const available = () => {
-    if (loadingProfile || errorProfile) {
+    if (!profile) {
       return 0.0;
     } else {
       switch (wallet) {
@@ -269,23 +284,43 @@ const Withdraw: React.FC = () => {
 
   const valid = (withdrawAmount ? withdrawAmount : 0) <= available()!;
 
-  const { wallets } = useWallets();
-
-  const selectedWallet = wallets.find((w) => w.symbol === wallet);
+  const pendingWithdrawal = () => {
+    const walletWithdrawals = allWithdrawals.filter(
+      (w: any) => w.wallet === wallet
+    );
+    const isPending = walletWithdrawals.some(
+      (w: WithdrawalItemProp) => w.completed === false
+    );
+    return isPending;
+  };
 
   const minimumErrorToast = async () => {
     const toast = document.createElement("ion-toast");
-    toast.message = "Minimum withdrawal amount is 2000 USD";
+    toast.message = "Unable to process withdrawal - Account limit";
     toast.duration = 4000;
 
     document.body.appendChild(toast);
     return toast.present();
   };
+
+  const pendingWithdrawalToast = async () => {
+    const toast = document.createElement("ion-toast");
+    toast.message = "You have a pending withdrawal, please wait...";
+    toast.duration = 4000;
+
+    document.body.appendChild(toast);
+    return toast.present();
+  };
+
   const RequestWithdrawal = () => {
     if (withdrawAmount && !requested) {
       if (withdrawAmount < 2000) {
         minimumErrorToast();
+      } else if (pendingWithdrawal()) {
+        pendingWithdrawalToast();
       } else {
+        setLoadingRequest(true);
+
         axiosInstance
           .post("users/withdrawals/", {
             wallet: selectedWallet?.symbol,
@@ -297,9 +332,12 @@ const Withdraw: React.FC = () => {
             setResponseAmount(res.data.amount);
             setRequested(true);
             setWithdrawAmount(null);
+            setLoadingRequest(false);
+            update();
           })
           .catch((err) => {
             // console.log(err.response);
+            setLoadingRequest(false);
           });
       }
     } else if (requested) {
@@ -309,22 +347,28 @@ const Withdraw: React.FC = () => {
   };
 
   useEffect(() => {
-    // console.log("fetching withdrawals...");
-    axiosInstance
-      .get("users/withdrawals/")
-      .then((res) => {
-        const results = res.data.filter(
-          (withdrawal: any) => withdrawal.wallet === wallet
-        );
-        setWithdrawals(results);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [wallet, responseAmount]);
+    if (symbol) {
+      setWallet(symbol.toUpperCase());
+    }
+  }, [symbol]);
+
+  useEffect(() => {
+    if (wallets) {
+      const selected = wallets.find((w) => w.symbol === wallet);
+      setSelectedWallet(selected);
+    }
+  }, [wallet, wallets]);
+
+  let withdrawals: any;
+
+  if (allWithdrawals) {
+    if (wallet) {
+      const results = allWithdrawals.filter((w: any) => w.wallet === wallet);
+      withdrawals = results;
+    } else {
+      withdrawals = allWithdrawals;
+    }
+  }
 
   return (
     <IonPage>
@@ -340,11 +384,12 @@ const Withdraw: React.FC = () => {
           value={wallet}
           onIonChange={(e) => setWallet(e.detail.value!)}
         >
-          {wallets.map(({ symbol, id }) => (
-            <IonSegmentButton key={id} value={symbol}>
-              <IonLabel>{symbol}</IonLabel>
-            </IonSegmentButton>
-          ))}
+          {wallets &&
+            wallets.map(({ symbol, id }) => (
+              <IonSegmentButton key={id} value={symbol}>
+                <IonLabel>{symbol}</IonLabel>
+              </IonSegmentButton>
+            ))}
         </IonSegment>
         <div onClick={() => setWithdrawAmount(available())} className="balance">
           <p className="wallet">
@@ -368,13 +413,12 @@ const Withdraw: React.FC = () => {
           closeDetail={() => setShowDetail(false)}
           valid={valid}
           wallet={wallet}
+          loading={loadingRequest}
         />
         {showDetail ? (
           <WithdrawalDetail detail={detail} />
-        ) : loading ? (
+        ) : !allWithdrawals ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <WithdrawalList
             toggleDetail={(detail: any) => {

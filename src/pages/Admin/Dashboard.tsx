@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   IonContent,
   IonPage,
   IonIcon,
-  IonButton,
   IonText,
   IonList,
   IonInput,
   IonItem,
   IonLabel,
   NavContext,
+  IonRouterLink,
 } from "@ionic/react";
 import { arrowBack, person } from "ionicons/icons";
 import Refresher from "../../components/utils/Refresher";
 import "./styles/Dashboard.scss";
-import axiosInstance from "../../services/baseApi";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
+import { LoadingList } from "../../components/ListLoader";
+import { config } from "../../app.config";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 interface UserProp {
   account: {
@@ -65,36 +66,20 @@ const UserItem: React.FC<UserItemProp> = ({
 const Dashboard: React.FC = () => {
   const { goBack } = useContext(NavContext);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [users, setUsers] = useState<UserProp[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  useEffect(() => {
-    // console.log("fetching users...");
-    axiosInstance
-      .get("users/portfolios/", {
-        timeout: 20000,
-      })
-      .then((res) => {
-        let results;
-        // console.log(res.data);
-        if (searchValue.length > 1) {
-          results = res.data.filter((users: any) =>
-            users.full_name.toLowerCase().includes(searchValue.toLowerCase())
-          );
-        } else {
-          results = res.data;
-        }
-        setUsers(results);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [searchValue]);
+  const { data: users } = useSecureRequest("/users/portfolios/");
+  const { data: admin } = useSecureRequest("/users/admin/");
+
+  let results: UserProp[];
+
+  if (searchValue.length > 3) {
+    results = users.filter((user: any) =>
+      user.full_name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  } else {
+    results = users;
+  }
 
   return (
     <IonPage>
@@ -106,27 +91,59 @@ const Dashboard: React.FC = () => {
           <IonIcon className="back-button" icon={arrowBack} />
         </div>
         {/* </IonRouterLink> */}
+        {admin && (
+          <>
+            <div className="overview">
+              <div className="welcome">
+                <h1>Welcome {admin.name}</h1>
+                <p>({config.name})</p>
+              </div>
+              <div className="statistics">
+                <div className="card">
+                  <h3>Users</h3>
+                  <p>{admin.users}</p>
+                </div>
+                <div className="card">
+                  <h3>Trades</h3>
+                  <p className={admin.trades && "pending"}>{admin.trades}</p>
+                </div>
+                <div className="card">
+                  <h3>Withdrawals</h3>
+                  <p className={admin.withdrawals && "pending"}>
+                    {admin.withdrawals}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <IonRouterLink routerLink="/sudo/wallets">
+              {admin.dummy_wallets ? (
+                <div className="wallets error">
+                  <p>Please fill wallets</p>
+                </div>
+              ) : (
+                <div className="wallets">
+                  <p>Edit wallets</p>
+                </div>
+              )}
+            </IonRouterLink>
+          </>
+        )}
+
         <div className="search-box">
           <IonInput
-            placeholder="Search for users..."
+            placeholder="Search users..."
             clearInput
             value={searchValue}
             onIonChange={(e) => setSearchValue(e.detail.value!)}
           />
         </div>
-        <div className="button">
-          <IonButton routerLink="/sudo/wallets" mode="ios">
-            Wallet addresses
-          </IonButton>
-        </div>
-        {loading ? (
+        {!users ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <IonList mode="ios">
-            {users.length > 0 ? (
-              users.map((user) => (
+            {results.length > 0 ? (
+              results.map((user) => (
                 <UserItem
                   key={user.trader_id}
                   id={user.id}

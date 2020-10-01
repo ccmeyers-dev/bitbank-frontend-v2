@@ -9,7 +9,7 @@ const Auth: React.FC = () => (
     <IonRouterOutlet>
       {/* test routes */}
       <Route path="/auth/login" component={Login} />
-      <Route path="/auth/register" component={Register} />
+      <Route path="/auth/register/:ref?" component={Register} />
 
       <Route
         path="/auth"

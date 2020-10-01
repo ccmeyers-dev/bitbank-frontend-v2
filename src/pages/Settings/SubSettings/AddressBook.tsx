@@ -14,15 +14,14 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import QRCode from "qrcode.react";
 
 //axios
-import { useWallets } from "../../../Context/WalletContext";
-import ErrorPage from "../../../components/ErrorPage";
 import { config } from "../../../app.config";
+import { useWallets } from "../../../Hooks/WalletsHook";
 
 const AddressBook: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [selected, setSelected] = useState("");
 
-  const { wallets, loading, error } = useWallets();
+  const { data: wallets } = useWallets();
 
   const { goBack } = useContext(NavContext);
 
@@ -38,15 +37,13 @@ const AddressBook: React.FC = () => {
           icon={arrowBack}
           onClick={() => goBack("/en/settings")}
         />
-        {loading ? (
+        {!wallets ? (
           <IonLoading
             cssClass="my-custom-loading"
             isOpen={true}
-            message={"Please wait..."}
+            message={"Fetching wallets..."}
             duration={5000}
           />
-        ) : error ? (
-          <ErrorPage />
         ) : (
           <>
             <IonToast

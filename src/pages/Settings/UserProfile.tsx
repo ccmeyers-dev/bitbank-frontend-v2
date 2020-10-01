@@ -12,17 +12,18 @@ import {
 import Refresher from "../../components/utils/Refresher";
 import { arrowBack } from "ionicons/icons";
 import "./styles/UserProfile.scss";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
+import { LoadingList } from "../../components/ListLoader";
 import { toCurrency, getInitials } from "../../components/utils/Utils";
-import { useProfile } from "../../Context/ProfileContext";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { useProfile } from "../../Hooks/ProfileHook";
 
 const UserProfile = () => {
   const { goBack } = useContext(NavContext);
 
   const [showToast, setShowToast] = useState(false);
+  const [showReferralToast, setShowReferralToast] = useState(false);
 
-  const { profile, loading, error } = useProfile();
+  const { data: profile } = useProfile();
 
   const accountLevel = (score: number | null | undefined) => {
     if (score) {
@@ -54,12 +55,18 @@ const UserProfile = () => {
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message="Trader ID copied successfully"
+          cssClass="toast"
           duration={2000}
         />
-        {loading ? (
+        <IonToast
+          isOpen={showReferralToast}
+          onDidDismiss={() => setShowReferralToast(false)}
+          message="Referral link copied successfully"
+          cssClass="toast"
+          duration={2000}
+        />
+        {!profile ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <div className="body">
             <div className="header">
@@ -123,6 +130,21 @@ const UserProfile = () => {
                 <IonItem className="ion-no-padding">
                   <IonLabel>
                     <h2>Copy Trader ID</h2>
+                  </IonLabel>
+                </IonItem>
+              </CopyToClipboard>
+            </IonList>
+
+            <IonList lines="none" mode="ios" className="more">
+              <CopyToClipboard
+                text={`${
+                  window.location.origin
+                }/auth/register/${profile?.trader_id!}`}
+                onCopy={() => setShowReferralToast(true)}
+              >
+                <IonItem className="ion-no-padding">
+                  <IonLabel>
+                    <h2>Share Referral Link</h2>
                   </IonLabel>
                 </IonItem>
               </CopyToClipboard>

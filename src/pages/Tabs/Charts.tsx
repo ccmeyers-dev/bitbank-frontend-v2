@@ -6,6 +6,11 @@ import "./styles/Charts.scss";
 
 // utils
 import Refresher from "../../components/utils/Refresher";
+import { TradingViewChart } from "../Widgets/TradingViewChart";
+import {
+  ScreenerWidget,
+  ScreenerWidgetScript,
+} from "../Widgets/ScreenerWidget";
 
 const Charts: React.FC = () => {
   const [symbol, setSymbol] = useState("BITSTAMP:BTCUSD");
@@ -17,53 +22,21 @@ const Charts: React.FC = () => {
 
     const scriptConfig = document.createElement("script");
 
-    scriptConfig.innerHTML = `
-    new TradingView.widget({
-      "autosize": true,
-      "symbol": "${symbol}",
-      "interval": "D",
-      "timezone": "Etc/UTC",
-      "theme": "${themeMode}",
-      "style": "1",
-      "locale": "en",
-      "toolbar_bg": "#f1f3f6",
-      "enable_publishing": false,
-      "allow_symbol_change": true,
-      "container_id": "candlesticks",
-    })`;
+    scriptConfig.innerHTML = TradingViewChart(symbol, themeMode);
 
     document.getElementById("market-window")?.appendChild(scriptConfig);
 
     const screenerScriptConfig = document.createElement("script");
     screenerScriptConfig.type = "text/javascript";
-    screenerScriptConfig.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
+    screenerScriptConfig.src = ScreenerWidgetScript;
+    screenerScriptConfig.innerHTML = ScreenerWidget(themeMode);
     screenerScriptConfig.async = true;
-
-    screenerScriptConfig.innerHTML = `
-    {
-      "width": "100%",
-      "height": "100%",
-      "defaultColumn": "overview",
-      "screener_type": "crypto_mkt",
-      "displayCurrency": "USD",
-      "colorTheme": "${themeMode}",
-      "locale": "en"
-    }
-    `;
 
     document
       .getElementById("screener-window")
       ?.appendChild(screenerScriptConfig);
-
-    return () => {
-      // console.log("removing...", scriptConfig);
-      document.getElementById("market-window")?.removeChild(scriptConfig);
-      document
-        .getElementById("screener-window")
-        ?.removeChild(screenerScriptConfig);
-    };
   }, [symbol, themeMode]);
+
   return (
     <IonPage className="Charts">
       <IonContent>

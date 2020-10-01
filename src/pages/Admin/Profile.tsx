@@ -18,8 +18,10 @@ import { arrowBack } from "ionicons/icons";
 import "./styles/Profile.scss";
 import { useParams, useHistory } from "react-router";
 import axiosInstance from "../../services/baseApi";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
+import { LoadingList } from "../../components/ListLoader";
 import { toCurrency, getInitials } from "../../components/utils/Utils";
+import { mutate } from "swr";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 interface UserProfileProp {
   id: number;
@@ -53,21 +55,25 @@ const Profile = () => {
   const [showAdminAlert, setShowAdminAlert] = useState(false);
 
   const [userProfile, setUserProfile] = useState(InitialUserProfile);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   const [showAdminToast, setShowAdminToast] = useState(false);
 
+  const history = useHistory();
+
   const { id: userId } = useParams();
 
-  const history = useHistory();
+  const { data: user, update } = useSecureRequest(
+    `/users/profile/?id=${userId}`
+  );
 
   const deleteUser = () => {
     // console.log("deleting user...");
     axiosInstance
-      .post(`users/delete-user/${userProfile.account_id}/`)
+      .post(`/users/delete-user/${userProfile.account_id}/`)
       .then((res) => {
         // console.log(res.data);
+        mutate("/users/portfolios/");
+        mutate("/users/admin/");
         history.goBack();
       })
       .catch((err) => {
@@ -78,10 +84,11 @@ const Profile = () => {
   const toggleAdminUser = () => {
     // console.log("toggling admin user...");
     axiosInstance
-      .post(`users/toggle-admin/${userProfile.account_id}/`)
+      .post(`/users/toggle-admin/${userProfile.account_id}/`)
       .then((res) => {
         // console.log(res.data);
         setShowAdminToast(true);
+        update();
       })
       .catch((err) => {
         // console.log(err.response);
@@ -90,32 +97,23 @@ const Profile = () => {
 
   useEffect(() => {
     // console.log("fetching user instance...");
-    axiosInstance
-      .get("users/current/?id=" + userId)
-      .then((res) => {
-        // console.log(res.data);
-        setUserProfile({
-          id: res.data.id,
-          account_id: res.data.account.id,
-          password: res.data.account.password2,
-          trader_id: res.data.trader_id,
-          full_name: res.data.full_name,
-          email: res.data.account.email,
-          current: res.data.current,
-          available: res.data.available,
-          total: res.data.total,
-          trade_score: res.data.trade_score,
-          is_admin: res.data.account.is_admin,
-        });
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        // console.log(err.response);
-        setError(true);
-        setLoading(false);
+
+    if (user) {
+      setUserProfile({
+        id: user.id,
+        account_id: user.account.id,
+        password: user.account.password2,
+        trader_id: user.trader_id,
+        full_name: user.full_name,
+        email: user.account.email,
+        current: user.current,
+        available: user.available,
+        total: user.total,
+        trade_score: user.trade_score,
+        is_admin: user.account.is_admin,
       });
-  }, [userId, showAdminToast]);
+    }
+  }, [user]);
 
   return (
     <IonPage className="AdminProfile">
@@ -177,12 +175,10 @@ const Profile = () => {
           isOpen={showAdminToast}
           onDidDismiss={() => setShowAdminToast(false)}
           message="User status changed successfully"
-          duration={2000}
+          duration={1000}
         />
-        {loading ? (
+        {!user ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <div className="body">
             <div className="header">

@@ -2,24 +2,59 @@
 
 .HomePage {
   .home {
-    background-color: rgb(22, 28, 112);
+    // background-color: rgb(22, 28, 112);
+    background-color: white;
     margin: auto;
     height: 100vh;
     .head {
+      @include flex(space-between);
       h1 {
         margin: 0;
-        color: white;
+        // color: white;
+        color: black;
         padding: 16px 32px;
         font-size: 24px;
         font-weight: 600;
       }
+      ion-icon {
+        margin-right: 24px;
+        font-size: 24px;
+        // color: white;
+        color: black;
+      }
     }
     h3 {
-      color: white;
+      // color: white;
+      color: black;
       margin: 48px 10vw;
       text-align: center;
       font-size: 28px;
       font-weight: 600;
+    }
+    .start {
+      padding: 0 12px 24px;
+      ion-button {
+        --border-radius: 12px;
+        --padding-top: 12px;
+        --padding-bottom: 12px;
+        --background: #52b788;
+        --background-activated: #66bd94;
+        --background-hover: #66bd94;
+        max-width: 600px;
+        margin: auto;
+        p {
+          font-weight: 700;
+          font-size: 14px;
+        }
+        &.visited {
+          --background: #f5cb5c;
+          --background-activated: #f5d16e;
+          --background-hover: #f5d16e;
+          p {
+            color: black;
+          }
+        }
+      }
     }
     .list {
       margin: 24px auto;
@@ -36,26 +71,23 @@
         }
         p {
           font-size: 14px;
-          color: white;
+          font-weight: 500;
+          // color: white;
+          color: rgb(26, 25, 25);
         }
       }
     }
     .next {
-      p {
-        text-align: center;
-        color: white;
-        font-size: 15px;
-        font-weight: bold;
-        margin: 32px;
-      }
-    }
-    .start {
       padding: 0 12px 48px;
       ion-button {
-        --border-radius: 24px;
-        --padding-top: 24px;
-        --padding-bottom: 24px;
-        --background: rgb(30, 109, 255);
+        --background: rgba(95, 93, 93, 0.192);
+        --background-activated: rgba(95, 93, 93, 0.192);
+        --background-hover: rgba(95, 93, 93, 0.192);
+        max-width: 600px;
+        margin: auto;
+        p {
+          color: black;
+        }
       }
     }
   }
@@ -67,7 +99,7 @@
       @include flex(space-between);
       h1 {
         margin: 0;
-        color: rgb(21, 73, 214);
+        color: black;
         padding: 16px 32px;
         font-size: 24px;
         font-weight: 600;
@@ -118,7 +150,7 @@
             border-radius: 8px;
             margin: 0 auto;
             max-width: 700px;
-            min-height: 320px;
+            min-height: 280px;
             padding: 12px;
             ion-icon {
               margin: 12px 0;
@@ -129,7 +161,7 @@
               font-weight: 600;
             }
             p {
-              font-size: 17px;
+              font-size: 16px;
               font-weight: 400;
               margin: 16px 8px;
             }

@@ -34,12 +34,12 @@ const TransactionDetailModal: React.FC<TransactionModalProp | null> = ({
             <p>{tx?.type}</p>
           </div>
           <div className="entry">
-            <p>Margin Level (%):</p>
-            <p>{(tx?.profit / tx?.amount).toFixed(2)}</p>
+            <p>Equity:</p>
+            <p>{(tx?.profit / tx?.duration!).toFixed(2)}</p>
           </div>
           <div className="entry">
             <p>Margin:</p>
-            <p>{(tx?.profit ?? 0).toFixed(2)}</p>
+            <p>{(tx?.profit / tx?.amount).toFixed(2)}</p>
           </div>
           <div className="entry">
             <p>Capital:</p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   IonPage,
   IonContent,
@@ -16,27 +16,25 @@ import {
 } from "@ionic/react";
 import { arrowBack, closeCircle } from "ionicons/icons";
 import "./styles/WalletAddress.scss";
-import { ErrorList } from "../../components/ListLoader";
 import axiosInstance from "../../services/baseApi";
-
-interface WalletAddressProp {
-  id: number;
-  wallet: string;
-  symbol: string;
-  address: string;
-}
+import useSecureRequest from "../../Hooks/SecureRequest";
+import { WalletProp } from "../../Interfaces/Wallet";
 
 const WalletAddress: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [wallets, setWallets] = useState<WalletAddressProp[]>([]);
 
   const [newAddress, setNewAddress] = useState("");
   const [selectId, setSelectId] = useState(1);
   const [selectWallet, setSelectWallet] = useState("Bitcoin");
   const [selectSymbol, setSelectSymbol] = useState("BTC");
+
+  const {
+    data: wallets,
+    update,
+  }: { data: WalletProp[]; update: () => void } = useSecureRequest(
+    "/users/wallets/"
+  );
 
   const selectModal = (id: number, wallet: string, symbol: string) => {
     setSelectId(id);
@@ -47,40 +45,19 @@ const WalletAddress: React.FC = () => {
 
   const handleUpdate = () => {
     if (newAddress.length > 10) {
-      setLoading(true);
       axiosInstance
-        .put(`users/wallets/${selectId}/`, {
+        .put(`/users/wallets/${selectId}/`, {
           wallet: selectWallet,
           symbol: selectSymbol,
           address: newAddress,
         })
-        .then((res) => {
-          // console.log(res.data);
-          setLoading(false);
+        .then(() => {
           setShowModal(false);
           setShowToast(true);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-          setLoading(false);
+          update();
         });
     }
   };
-
-  useEffect(() => {
-    // console.log("fetching users...");
-    axiosInstance
-      .get("users/wallets/")
-      .then((res) => {
-        setWallets(res.data);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [showToast]);
 
   return (
     <IonPage>
@@ -92,17 +69,15 @@ const WalletAddress: React.FC = () => {
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message={`${selectWallet} wallet address successfully updated`}
-          duration={2000}
+          duration={1000}
         />
-        {loading ? (
+        {!wallets ? (
           <IonLoading
             cssClass="my-custom-loading"
             isOpen={true}
             message={"Please wait..."}
             duration={5000}
           />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <>
             <IonListHeader lines="none">
@@ -115,14 +90,12 @@ const WalletAddress: React.FC = () => {
                 <div className="address">
                   <p>{address}</p>
                 </div>
-                <IonButton
+                <div
                   onClick={() => selectModal(id, wallet, symbol)}
-                  expand="block"
-                  className={wallet}
-                  mode="ios"
+                  className={`update ${wallet}`}
                 >
                   <p>Update {symbol} address</p>
-                </IonButton>
+                </div>
               </div>
             ))}
           </>

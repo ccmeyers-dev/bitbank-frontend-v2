@@ -15,10 +15,10 @@ import { arrowBack } from "ionicons/icons";
 import NumberInput from "../../components/NumberInput";
 import Refresher from "../../components/utils/Refresher";
 import { useParams, useHistory } from "react-router";
-import { useProfile } from "../../Context/ProfileContext";
 import axiosInstance from "../../services/baseApi";
-import { useWallets } from "../../Context/WalletContext";
 import { WalletProp } from "../../Interfaces/Wallet";
+import { useWallets } from "../../Hooks/WalletsHook";
+import { useProfile } from "../../Hooks/ProfileHook";
 
 const BuySell: React.FC = () => {
   const [mainValue, setMainValue] = useState<string>("0");
@@ -51,7 +51,8 @@ const BuySell: React.FC = () => {
   };
 
   const { wallet, order } = useParams();
-  const { profile, loading, error } = useProfile();
+
+  const { data: profile, update } = useProfile();
 
   const orderTheme = () => {
     switch (order) {
@@ -83,23 +84,23 @@ const BuySell: React.FC = () => {
 
   const valid = main <= available()!;
 
-  const maxValue = loading ? "0.00" : error ? "0.00" : available()!.toString();
+  const maxValue = !profile ? "0.00" : available()!.toString();
 
-  const { wallets, loading: loadingWallets } = useWallets();
+  const { data: wallets } = useWallets();
 
   // const selectedWallet = wallets.find((w) => w.symbol === wallet.toUpperCase());
 
   useEffect(() => {
-    if (!loadingWallets) {
+    if (wallets) {
       const selected = wallets.find((w) => w.symbol.toLowerCase() === wallet);
       setSelectedWallet(selected);
     }
-  }, [wallets, wallet, loadingWallets]);
+  }, [wallets, wallet]);
 
-  const reloadTimeout = () =>
-    setTimeout(() => {
-      history.go(0);
-    }, 4000);
+  // const reloadTimeout = () =>
+  //   setTimeout(() => {
+  //     update();
+  //   }, 4000);
 
   const successToast = async (amount: number, order: string) => {
     const toast = document.createElement("ion-toast");
@@ -107,11 +108,11 @@ const BuySell: React.FC = () => {
     toast.duration = 4000;
 
     document.body.appendChild(toast);
-    reloadTimeout();
+    update();
     return toast.present();
   };
   const handleSubmit = () => {
-    if (main < 300) {
+    if (main < 100) {
       setShowToast(true);
     } else {
       axiosInstance
@@ -147,7 +148,7 @@ const BuySell: React.FC = () => {
         <IonToast
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
-          message="Minimum order amount is 300 USD"
+          message="Minimum order amount is 100 USD"
           duration={2000}
         />
         <IonText>
@@ -175,13 +176,9 @@ const BuySell: React.FC = () => {
           <IonSelectOption value={60}>2 Months</IonSelectOption>
         </IonSelect>
         <NumberInput handleInput={handleInput} />
-        {loading ? (
+        {!profile ? (
           <IonButton expand="block">
             <p>Loading...</p>
-          </IonButton>
-        ) : error ? (
-          <IonButton expand="block">
-            <p>Server Error</p>
           </IonButton>
         ) : (
           <IonButton

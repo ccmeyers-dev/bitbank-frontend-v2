@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   IonContent,
   IonPage,
@@ -30,13 +30,12 @@ import TransactionDetailModal from "../../components/TransactionDetailModal";
 import { TransactionItemProp } from "../../Interfaces/Transaction";
 
 //mock data
-import { useCoinValue } from "../../Context/Hooks/CoinValueHook";
+import { useCoinValue } from "../../Hooks/CoinValueHook";
 import { WalletSelectorProp } from "../../Interfaces/Wallet";
-import axiosInstance from "../../services/baseApi";
-import { useWallets } from "../../Context/WalletContext";
-import { useProfile } from "../../Context/ProfileContext";
-import ErrorPage from "../../components/ErrorPage";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
+import { LoadingList } from "../../components/ListLoader";
+import { useWallets } from "../../Hooks/WalletsHook";
+import { useProfile } from "../../Hooks/ProfileHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 const WalletSelector: React.FC<WalletSelectorProp> = ({
   symbol,
@@ -55,13 +54,13 @@ const WalletSelector: React.FC<WalletSelectorProp> = ({
       case "XRP":
         return "ripple";
       default:
-        return "coin";
+        return "steem";
     }
   };
   return (
     <IonItem onClick={walletSetter} lines="full" className="ion-no-padding">
       <div className="icon" slot="start">
-        <img src={`${wallet()}.png`} alt="" />
+        <IonIcon src={`coins/${wallet()}.svg`} />
       </div>
       <IonLabel className="description">
         <h3>
@@ -86,11 +85,22 @@ const TransactionHistory: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [detail, setDetail] = useState<TransactionItemProp | null>(null);
 
-  const { wallets } = useWallets();
-  const [transactions, setTransactions] = useState([]);
+  const { data: wallets } = useWallets();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { data: allTransactions } = useSecureRequest("/users/transactions/");
+
+  // const [transactions, setTransactions] = useState([]);
+
+  let transactions: TransactionItemProp[];
+  if (wallet !== "All") {
+    const results = allTransactions.filter((tx: any) => tx.wallet === wallet);
+    transactions = results;
+  } else {
+    transactions = allTransactions;
+  }
+
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(false);
 
   const transactionToast = async (amount: number, order: string) => {
     const toast = document.createElement("ion-toast");
@@ -110,11 +120,7 @@ const TransactionHistory: React.FC = () => {
     }
   };
 
-  const {
-    profile,
-    loading: loadingProfile,
-    error: errorProfile,
-  } = useProfile();
+  const { data: profile } = useProfile();
 
   const available = (symbol: string) => {
     switch (symbol) {
@@ -132,45 +138,39 @@ const TransactionHistory: React.FC = () => {
   };
 
   const walletBalance = (symbol: string) =>
-    loadingProfile
-      ? "0.00"
-      : errorProfile
-      ? "0.00"
-      : available(symbol)!.toFixed(2);
+    !profile ? "0.00" : available(symbol)!.toFixed(2);
 
-  useEffect(() => {
-    // console.log("fetching transactions...");
-    axiosInstance
-      .get("users/transactions/")
-      .then((res: any) => {
-        if (wallet !== "All") {
-          const results = res.data.filter((tx: any) => tx.wallet === wallet);
-          setTransactions(results);
-        } else {
-          setTransactions(res.data);
-        }
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err: any) => {
-        setError(true);
-        setLoading(false);
-      });
-  }, [wallet]);
+  // useEffect(() => {
+  //   // console.log("fetching transactions...");
+  //   axiosInstance
+  //     .get("users/transactions/")
+  //     .then((res: any) => {
+  //       if (wallet !== "All") {
+  //         const results = res.data.filter((tx: any) => tx.wallet === wallet);
+  //         setTransactions(results);
+  //       } else {
+  //         setTransactions(res.data);
+  //       }
+  //       setError(false);
+  //       setLoading(false);
+  //     })
+  //     .catch((err: any) => {
+  //       setError(true);
+  //       setLoading(false);
+  //     });
+  // }, [wallet]);
   return (
     <IonPage className="TransactionHistory">
       <IonContent>
         {/* refresher */}
         <Refresher />
-        {loading ? (
+        {!allTransactions ? (
           <IonLoading
             cssClass="my-custom-loading"
             isOpen={true}
             message={"Please wait..."}
             duration={5000}
           />
-        ) : error ? (
-          <ErrorPage />
         ) : (
           <>
             <IonListHeader>
@@ -196,10 +196,8 @@ const TransactionHistory: React.FC = () => {
                 <IonIcon icon={showSelectorModal ? chevronUp : chevronDown} />
               </IonItem>
             </div>
-            {loading ? (
+            {!allTransactions ? (
               <LoadingList />
-            ) : error ? (
-              <ErrorList />
             ) : (
               <IonList mode="ios">
                 {transactions.length > 0 ? (
@@ -245,17 +243,18 @@ const TransactionHistory: React.FC = () => {
                       setShowSelectorModal(false);
                     }}
                   />
-                  {wallets.map(({ symbol }) => (
-                    <WalletSelector
-                      key={symbol}
-                      symbol={symbol}
-                      balance={walletBalance(symbol)}
-                      walletSetter={() => {
-                        setWallet(symbol);
-                        setShowSelectorModal(false);
-                      }}
-                    />
-                  ))}
+                  {wallets &&
+                    wallets.map(({ symbol }) => (
+                      <WalletSelector
+                        key={symbol}
+                        symbol={symbol}
+                        balance={walletBalance(symbol)}
+                        walletSetter={() => {
+                          setWallet(symbol);
+                          setShowSelectorModal(false);
+                        }}
+                      />
+                    ))}
                 </IonList>
               </IonContent>
             </IonModal>

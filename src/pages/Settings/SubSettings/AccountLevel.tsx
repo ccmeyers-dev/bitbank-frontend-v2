@@ -5,17 +5,16 @@ import {
   IonIcon,
   IonListHeader,
   NavContext,
-  IonLoading,
 } from "@ionic/react";
 import { arrowBack, checkmarkCircle, closeCircle } from "ionicons/icons";
 import "./styles/AccountLevel.scss";
-import { useProfile } from "../../../Context/ProfileContext";
 import { LoadingList } from "../../../components/ListLoader";
+import { useProfile } from "../../../Hooks/ProfileHook";
 
 const AccountLevel: React.FC = () => {
   const { goBack } = useContext(NavContext);
 
-  const { profile, loading, error } = useProfile();
+  const { data: profile } = useProfile();
 
   return (
     <IonPage>
@@ -28,14 +27,7 @@ const AccountLevel: React.FC = () => {
         <IonListHeader lines="none">
           <h1>Account Level</h1>
         </IonListHeader>
-        {loading ? (
-          <IonLoading
-            cssClass="my-custom-loading"
-            isOpen={true}
-            message={"Please wait..."}
-            duration={5000}
-          />
-        ) : error ? (
+        {!profile ? (
           <LoadingList />
         ) : (
           <>

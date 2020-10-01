@@ -7,7 +7,7 @@ import { HistoryIconSelector } from "./utils/Utils";
 import { TransactionListProp } from "../Interfaces/Transaction";
 
 //mock data
-import { useCoinValue } from "../Context/Hooks/CoinValueHook";
+import { useCoinValue } from "../Hooks/CoinValueHook";
 
 const HistoryListItem: React.FC<TransactionListProp> = ({ tx, toggleShow }) => {
   return (

@@ -25,9 +25,11 @@ import Refresher from "../../components/utils/Refresher";
 import { arrowBack, swapHorizontal, closeCircle } from "ionicons/icons";
 import "./styles/Trade.scss";
 import axiosInstance from "../../services/baseApi";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
-import { useWallets } from "../../Context/WalletContext";
+import { LoadingList } from "../../components/ListLoader";
 import { useParams } from "react-router";
+import { useWallets } from "../../Hooks/WalletsHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
+import { mutate } from "swr";
 
 interface AddTradeItem {
   amount: number | null;
@@ -71,9 +73,6 @@ const InitialTrade: TradeItem = {
 
 const Trade = () => {
   const { goBack } = useContext(NavContext);
-  const [trades, setTrades] = useState<TradeItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   const [showToast, setShowToast] = useState(false);
   const [showTradeModal, setShowTradeModal] = useState(false);
@@ -85,10 +84,17 @@ const Trade = () => {
 
   const [showDeleteToast, setShowDeleteToast] = useState(false);
 
-  const { wallets, loading: loadingWallets } = useWallets();
+  const { data: wallets } = useWallets();
 
   //test
   const { id: userId } = useParams();
+
+  const {
+    data: trades,
+    update,
+  }: { data: TradeItem[]; update: () => void } = useSecureRequest(
+    `/users/trades/?id=${userId}`
+  );
 
   const newTrade = () => {
     // console.log("posting trade...");
@@ -102,11 +108,13 @@ const Trade = () => {
       // console.log("incomplete post data");
     } else {
       axiosInstance
-        .post("users/trades/", addTrade)
+        .post("/users/trades/", addTrade)
         .then((res) => {
           // console.log(res.data);
           setShowAddTradeModal(false);
           setShowAddToast(true);
+          update();
+          mutate(`/users/profile/?id=${userId}`);
         })
         .catch((err) => {
           // console.log(err.response);
@@ -122,11 +130,13 @@ const Trade = () => {
   const updateTrade = () => {
     // console.log("updating trade...");
     axiosInstance
-      .put(`users/trades/${selectTrade.id}/`, selectTrade)
+      .put(`/users/trades/${selectTrade.id}/`, selectTrade)
       .then((res) => {
         // console.log(res.data);
         setShowTradeModal(false);
         setShowToast(true);
+        update();
+        mutate(`/users/profile/?id=${userId}`);
       })
       .catch((err) => {
         // console.log(err.response);
@@ -136,11 +146,13 @@ const Trade = () => {
   const deleteTrade = () => {
     // console.log("deleting trade...");
     axiosInstance
-      .delete(`users/trades/${selectTrade.id}/`)
+      .delete(`/users/trades/${selectTrade.id}/`)
       .then((res) => {
         // console.log(res.data);
         setShowTradeModal(false);
         setShowDeleteToast(true);
+        update();
+        mutate(`/users/profile/?id=${userId}`);
       })
       .catch((err) => {
         // console.log(err.response);
@@ -150,21 +162,7 @@ const Trade = () => {
   useEffect(() => {
     // console.log("setting user " + userId);
     setAddTrade((current) => ({ ...current, portfolio: userId }));
-    // console.log("fetching trades...");
-    axiosInstance
-      .get("users/trades/?id=" + userId)
-      .then((res) => {
-        setTrades(res.data);
-        // console.log(res.data);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        // console.log(err.response);
-        setError(true);
-        setLoading(false);
-      });
-  }, [showToast, showAddToast, showDeleteToast, userId]);
+  }, [userId]);
 
   return (
     <IonPage className="AdminTrade">
@@ -183,30 +181,32 @@ const Trade = () => {
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message="Trade updated successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showAddToast}
           onDidDismiss={() => setShowAddToast(false)}
           message="Trade added successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showDeleteToast}
           onDidDismiss={() => setShowDeleteToast(false)}
           message="Trade deleted successfully"
-          duration={2000}
+          duration={1000}
         />
 
         <div className="button">
-          <IonButton mode="ios" onClick={() => setShowAddTradeModal(true)}>
+          <IonButton
+            color="danger"
+            mode="ios"
+            onClick={() => setShowAddTradeModal(true)}
+          >
             Add Trade
           </IonButton>
         </div>
-        {loading ? (
+        {!trades ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <IonList mode="ios">
             {trades.length > 0 ? (
@@ -467,7 +467,7 @@ const Trade = () => {
                           }));
                         }}
                       >
-                        {!loadingWallets &&
+                        {wallets &&
                           wallets.map(({ wallet, id }) => (
                             <IonSelectOption key={id} value={id}>
                               {wallet}

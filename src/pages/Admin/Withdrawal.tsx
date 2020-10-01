@@ -25,9 +25,10 @@ import Refresher from "../../components/utils/Refresher";
 import { arrowBack, arrowUp, closeCircle } from "ionicons/icons";
 import "./styles/Withdrawal.scss";
 import axiosInstance from "../../services/baseApi";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
-import { useWallets } from "../../Context/WalletContext";
+import { LoadingList } from "../../components/ListLoader";
 import { useParams } from "react-router";
+import { useWallets } from "../../Hooks/WalletsHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 interface AddWithdrawalItem {
   completed: boolean;
@@ -82,9 +83,6 @@ const InitialWithdrawal: WithdrawalItem = {
 
 const Withdrawal = () => {
   const { goBack } = useContext(NavContext);
-  const [Withdrawals, setWithdrawals] = useState<WithdrawalItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [selectWithdrawal, setSelectWithdrawal] = useState(InitialWithdrawal);
@@ -99,10 +97,17 @@ const Withdrawal = () => {
   const [showDeleteToast, setShowDeleteToast] = useState(false);
   const [showUpdateToast, setShowUpdateToast] = useState(false);
 
-  const { wallets, loading: loadingWallets } = useWallets();
+  const { data: wallets } = useWallets();
 
   //test
   const { id: userId } = useParams();
+
+  const {
+    data: withdrawals,
+    update,
+  }: { data: WithdrawalItem[]; update: () => void } = useSecureRequest(
+    `/users/withdrawals/?id=${userId}`
+  );
 
   const newWithdrawal = () => {
     // console.log("posting Withdrawal...");
@@ -114,11 +119,12 @@ const Withdrawal = () => {
       // console.log("incomplete post data");
     } else {
       axiosInstance
-        .post("users/withdrawals/", addWithdrawal)
+        .post("/users/withdrawals/", addWithdrawal)
         .then((res) => {
           // console.log(res.data);
           setShowAddWithdrawalModal(false);
           setShowAddToast(true);
+          update();
         })
         .catch((err) => {
           // console.log(err.response);
@@ -129,7 +135,7 @@ const Withdrawal = () => {
   const toggleStatus = () => {
     // console.log("toggling withdrawal status...");
     axiosInstance
-      .put(`users/add-withdrawals/${selectWithdrawal.id}/`, {
+      .put(`/users/add-withdrawals/${selectWithdrawal.id}/`, {
         wallet: selectWithdrawal.wallet,
         amount: selectWithdrawal.amount,
         completed: !selectWithdrawal.completed,
@@ -139,6 +145,7 @@ const Withdrawal = () => {
         // console.log(res.data);
         setShowWithdrawalModal(false);
         setShowUpdateToast(true);
+        update();
       })
       .catch((err) => {
         // console.log(err.response);
@@ -159,12 +166,13 @@ const Withdrawal = () => {
       // console.log("incomplete post data");
     } else {
       axiosInstance
-        .post("users/billings/", billing)
+        .post("/users/billings/", billing)
         .then((res) => {
           // console.log(res.data);
           setShowWithdrawalModal(false);
           setShowBillingToast(true);
           setBilling(InitialBilling);
+          update();
         })
         .catch((err) => {
           // console.log(err.response);
@@ -175,11 +183,12 @@ const Withdrawal = () => {
   const deleteWithdrawal = () => {
     // console.log("deleting Withdrawal...");
     axiosInstance
-      .delete(`users/add-withdrawals/${selectWithdrawal.id}/`)
+      .delete(`/users/add-withdrawals/${selectWithdrawal.id}/`)
       .then((res) => {
         // console.log(res.data);
         setShowWithdrawalModal(false);
         setShowDeleteToast(true);
+        update();
       })
       .catch((err) => {
         // console.log(err.response);
@@ -194,27 +203,7 @@ const Withdrawal = () => {
   useEffect(() => {
     // console.log("setting user " + userId);
     setAddWithdrawal((current) => ({ ...current, portfolio: userId }));
-    // console.log("fetching Withdrawals...");
-    axiosInstance
-      .get("users/withdrawals/?id=" + userId)
-      .then((res) => {
-        setWithdrawals(res.data);
-        // console.log(res.data);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        // console.log(err.response);
-        setError(true);
-        setLoading(false);
-      });
-  }, [
-    showBillingToast,
-    showAddToast,
-    showUpdateToast,
-    showDeleteToast,
-    userId,
-  ]);
+  }, [userId]);
 
   return (
     <IonPage className="AdminWithdrawal">
@@ -233,40 +222,42 @@ const Withdrawal = () => {
           isOpen={showBillingToast}
           onDidDismiss={() => setShowBillingToast(false)}
           message="Billing added successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showAddToast}
           onDidDismiss={() => setShowAddToast(false)}
           message="Withdrawal added successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showDeleteToast}
           onDidDismiss={() => setShowDeleteToast(false)}
           message="Withdrawal deleted successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showUpdateToast}
           onDidDismiss={() => setShowUpdateToast(false)}
           message="Withdrawal updated successfully"
-          duration={2000}
+          duration={1000}
         />
 
         <div className="button">
-          <IonButton mode="ios" onClick={() => setShowAddWithdrawalModal(true)}>
+          <IonButton
+            color="warning"
+            mode="ios"
+            onClick={() => setShowAddWithdrawalModal(true)}
+          >
             Add Withdrawal
           </IonButton>
         </div>
-        {loading ? (
+        {!withdrawals ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <IonList mode="ios">
-            {Withdrawals.length > 0 ? (
-              Withdrawals.map((withdrawal) => (
+            {withdrawals.length > 0 ? (
+              withdrawals.map((withdrawal) => (
                 <IonItem
                   onClick={() => handleWithdrawal(withdrawal)}
                   key={withdrawal.id}
@@ -420,7 +411,7 @@ const Withdrawal = () => {
                     <IonCol>
                       <IonInput
                         type="number"
-                        placeholder="Capital"
+                        placeholder="Amount"
                         clearInput
                         value={addWithdrawal.amount}
                         onIonChange={(e) => {
@@ -449,7 +440,7 @@ const Withdrawal = () => {
                           }));
                         }}
                       >
-                        {!loadingWallets &&
+                        {wallets &&
                           wallets.map(({ wallet, id, symbol }) => (
                             <IonSelectOption key={id} value={symbol}>
                               {wallet}

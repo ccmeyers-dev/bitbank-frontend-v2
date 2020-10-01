@@ -30,17 +30,25 @@ import "./styles/Settings.scss";
 
 // utils
 import Refresher from "../../components/utils/Refresher";
-import { useProfile } from "../../Context/ProfileContext";
 import axiosInstance from "../../services/baseApi";
 import { useHistory } from "react-router";
+import { useProfile } from "../../Hooks/ProfileHook";
 
 const Settings: React.FC = () => {
-  const { profile, loading, error } = useProfile();
+  const { data: profile } = useProfile();
 
   const history = useHistory();
 
   const [showAlert, setShowAlert] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
+
+  const reloadTimeout = () => {
+    history.replace("/home");
+    setTimeout(() => {
+      window.location.reload();
+      return false;
+    }, 2000);
+  };
 
   const logoutHandler = () => {
     axiosInstance
@@ -52,7 +60,7 @@ const Settings: React.FC = () => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         axiosInstance.defaults.headers["Authorization"] = null;
-        return res;
+        return reloadTimeout();
       })
       .catch((err) => {
         // console.log("error: ", err);
@@ -73,10 +81,10 @@ const Settings: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (profile) {
       setIsAdmin(profile?.account.is_admin);
     }
-  }, [profile, error, loading]);
+  }, [profile]);
 
   return (
     <IonPage>
@@ -101,7 +109,6 @@ const Settings: React.FC = () => {
               cssClass: "danger",
               handler: () => {
                 logoutHandler();
-                history.push("/");
               },
             },
           ]}
@@ -159,7 +166,7 @@ const Settings: React.FC = () => {
             </IonLabel>
           </IonItem>
           {isAdmin && (
-            <IonItem routerLink="/sudo/dashboard/" detail>
+            <IonItem routerLink="/sudo/dashboard" detail>
               <IonIcon icon={cog} />
               <IonLabel>
                 <IonText>

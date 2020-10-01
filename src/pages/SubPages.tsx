@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { IonPage, IonRouterOutlet } from "@ionic/react";
 
 import ThemeSelector from "./Settings/ThemeSelector";
@@ -34,11 +34,9 @@ const SubPages: React.FC = () => (
       <Route path="/tx/order/:wallet/:order" component={BuySell} />
       <Route path="/tx/exchange/:exchange" component={Exchange} />
       <Route path="/tx/wallet/:symbol" component={Wallet} />
-      <Route path="/tx/withdraw" component={Withdraw} />
+      <Route path="/tx/withdraw/:symbol?" component={Withdraw} />
       <Route path="/tx/copy-trade/:wallet" component={CopyTrade} />
       <Route path="/tx/overview" component={MarketOverview} />
-
-      <Route render={() => <Redirect to="/en" />} exact={true} />
     </IonRouterOutlet>
   </IonPage>
 );

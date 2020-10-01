@@ -5,6 +5,8 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import decode from "jwt-decode";
 
+import loadable from "@loadable/component";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -25,15 +27,19 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.scss";
 
 // Route components
-import Tabs from "./pages/Tabs";
-import SubPages from "./pages/SubPages";
-import Auth from "./pages/Auth";
-import HomePage from "./pages/Landing/HomePage";
-import { WalletProvider } from "./Context/WalletContext";
-import { ProfileProvider } from "./Context/ProfileContext";
-import AdminPages from "./pages/AdminPages";
+// import Tabs from "./pages/Tabs";
+// import SubPages from "./pages/SubPages";
+// import Auth from "./pages/Auth";
+// import HomePage from "./pages/Landing/HomePage";
+// import AdminPages from "./pages/AdminPages";
 
-export const checkAuth = () => {
+const AsyncHome = loadable(() => import("./pages/Landing/HomePage"));
+const AsyncAdmin = loadable(() => import("./pages/AdminPages"));
+const AsyncSubPages = loadable(() => import("./pages/SubPages"));
+const AsyncAuth = loadable(() => import("./pages/Auth"));
+const AsyncTabs = loadable(() => import("./pages/Tabs"));
+
+export const isAuthenticated = () => {
   const accessToken = localStorage.getItem("access_token");
   const refreshToken = localStorage.getItem("refresh_token");
 
@@ -57,46 +63,20 @@ export const checkAuth = () => {
   return true;
 };
 
-const ProtectedRoute = ({ component: Component, ...rest }: any) => (
+const ControlledRoute = ({
+  component: Component,
+  loggedInOnly = true,
+  ...rest
+}: any) => (
   <Route
     {...rest}
     render={(props) =>
-      checkAuth() ? (
-        <WalletProvider>
-          <ProfileProvider>
-            <Component {...props} />
-          </ProfileProvider>
-        </WalletProvider>
-      ) : (
-        <Redirect to="/" exact />
-      )
-    }
-  />
-);
-
-const AnonymousRoute = ({ component: Component, ...rest }: any) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      !checkAuth() ? (
-        <ProfileProvider>
-          <Component {...props} />
-        </ProfileProvider>
-      ) : (
-        <Redirect to="/en/home" exact />
-      )
-    }
-  />
-);
-
-const HomeRoute = ({ component: Component, ...rest }: any) => (
-  <Route
-    {...rest}
-    render={(props) => (
-      <ProfileProvider>
+      isAuthenticated() === loggedInOnly ? (
         <Component {...props} />
-      </ProfileProvider>
-    )}
+      ) : (
+        <Redirect to={loggedInOnly ? "/home" : "/en/home"} exact />
+      )
+    }
   />
 );
 
@@ -105,17 +85,21 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <ProtectedRoute path="/en" component={Tabs} />
+          <ControlledRoute path="/en" component={AsyncTabs} />
 
-          <ProtectedRoute path="/tx" component={SubPages} />
+          <ControlledRoute path="/tx" component={AsyncSubPages} />
 
-          <ProtectedRoute path="/sudo" component={AdminPages} />
+          <ControlledRoute path="/sudo" component={AsyncAdmin} />
 
-          <AnonymousRoute path="/auth" component={Auth} />
+          <ControlledRoute
+            path="/auth"
+            component={AsyncAuth}
+            loggedInOnly={false}
+          />
 
-          <HomeRoute path="/" component={HomePage} exact />
+          <Route path="/home" component={AsyncHome} />
 
-          <Route render={() => <Redirect to="/en/home" />} exact />
+          <Route render={() => <Redirect to="/home" />} exact />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

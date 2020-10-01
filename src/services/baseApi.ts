@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// const baseURL = "http://172.20.10.2:8000/api/";
-const baseURL = "https://steemtrade.pythonanywhere.com/api/";
-// const baseURL = "http://192.168.43.58:8000/api/";
-// const baseURL = "http://127.0.0.1:8000/api/";
+// const baseURL = "http://172.20.10.2:8000/api";
+const baseURL = "https://steemtrade.pythonanywhere.com/api";
+// const baseURL = "http://192.168.43.58:8000/api";
+// const baseURL = "http://127.0.0.1:8000/api";
 
 const accessToken = localStorage.getItem("access_token");
 const refreshToken = localStorage.getItem("refresh_token");
@@ -32,10 +32,15 @@ axiosInstance.interceptors.response.use(
     //preventing infinite loops early
     if (
       error.response.status === 401 &&
-      originalRequest.url === "auth/token/refresh/"
+      originalRequest.url === "/auth/token/refresh/"
     ) {
-      console.log("Error fetching refresh token");
+      console.log("Error refreshing token");
+
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+
       window.location.href = "/auth/login/";
+
       return Promise.reject(error);
     }
 
@@ -63,7 +68,7 @@ axiosInstance.interceptors.response.use(
 
         if (tokenParts.exp > now) {
           return axiosInstance
-            .post("auth/token/refresh/", { refresh: refreshToken })
+            .post("/auth/token/refresh/", { refresh: refreshToken })
             .then((response) => {
               // console.log("resetting ", response);
               localStorage.setItem("access_token", response.data.access);

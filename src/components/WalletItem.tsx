@@ -1,18 +1,14 @@
 import React from "react";
 import { WalletItemProp } from "../Interfaces/Wallet";
-import { IonItem, IonThumbnail, IonLabel, IonText } from "@ionic/react";
+import { IonItem, IonLabel, IonText, IonIcon } from "@ionic/react";
 import "./styles/WalletItem.scss";
-import { useProfile } from "../Context/ProfileContext";
-import { useCoinValue } from "../Context/Hooks/CoinValueHook";
+import { useCoinValue } from "../Hooks/CoinValueHook";
+import { useProfile } from "../Hooks/ProfileHook";
 
 export const WalletItem: React.FC<WalletItemProp> = ({
   wallet: { wallet, symbol },
 }) => {
-  const {
-    profile,
-    loading: loadingProfile,
-    error: errorProfile,
-  } = useProfile();
+  const { data: profile } = useProfile();
 
   const available = (symbol: string) => {
     switch (symbol) {
@@ -30,20 +26,14 @@ export const WalletItem: React.FC<WalletItemProp> = ({
   };
 
   const walletBalance = (symbol: string) =>
-    loadingProfile
-      ? "0.00"
-      : errorProfile
-      ? "0.00"
-      : available(symbol)!.toFixed(2);
+    !profile ? "0.00" : available(symbol)!.toFixed(2);
 
   return (
     <IonItem
       routerLink={`/tx/wallet/${symbol.toLowerCase()}`}
       className="WalletItem ion-no-padding"
     >
-      <IonThumbnail slot="start">
-        <img src={`${wallet}.png`} alt="" />
-      </IonThumbnail>
+      <IonIcon src={`coins/${wallet}.svg`} />
       <IonLabel className="coin-label">
         <IonText>
           <h3>{wallet}</h3>

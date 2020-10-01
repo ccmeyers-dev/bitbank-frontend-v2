@@ -1,5 +1,5 @@
 import React from "react";
-import { IonIcon } from "@ionic/react";
+import { IonIcon, IonRouterLink } from "@ionic/react";
 import { warning } from "ionicons/icons";
 import "./styles/ErrorPage.scss";
 import { useHistory } from "react-router";
@@ -13,9 +13,9 @@ const ErrorPage: React.FC = () => {
         <IonIcon icon={warning} />
       </div>
       <p onClick={() => history.go(0)}>Try again</p>
-      <p className="home" onClick={() => history.push("/")}>
-        Go home
-      </p>
+      <IonRouterLink routerLink="/home" routerDirection="root">
+        <p className="home">Go home</p>
+      </IonRouterLink>
     </div>
   );
 };

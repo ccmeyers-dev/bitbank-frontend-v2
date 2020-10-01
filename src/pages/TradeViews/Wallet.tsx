@@ -22,11 +22,11 @@ import { TransactionItemProp } from "../../Interfaces/Transaction";
 import { useParams } from "react-router";
 
 //mock data
-import { useWallets } from "../../Context/WalletContext";
 import axiosInstance from "../../services/baseApi";
-import { useProfile } from "../../Context/ProfileContext";
-import { useCoinValue } from "../../Context/Hooks/CoinValueHook";
-import { ErrorList, LoadingList } from "../../components/ListLoader";
+import { useCoinValue } from "../../Hooks/CoinValueHook";
+import { ErrorList } from "../../components/ListLoader";
+import { useWallets } from "../../Hooks/WalletsHook";
+import { useProfile } from "../../Hooks/ProfileHook";
 
 const Wallet: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -63,13 +63,9 @@ const Wallet: React.FC = () => {
     }
   };
 
-  const { wallets } = useWallets();
+  const { data: wallets } = useWallets();
 
-  const {
-    profile,
-    loading: loadingProfile,
-    error: errorProfile,
-  } = useProfile();
+  const { data: profile } = useProfile();
 
   const available = () => {
     switch (symbol) {
@@ -86,23 +82,21 @@ const Wallet: React.FC = () => {
     }
   };
 
-  const walletBalance = loadingProfile
-    ? "0.00"
-    : errorProfile
-    ? "0.00"
-    : available()!.toFixed(2);
+  const walletBalance = !profile ? "0.00" : available()!.toFixed(2);
 
   useEffect(() => {
     // console.log("wallet... ", wallet, loading, error);
     setLoading(true);
-    const result = wallets.find((w) => w.symbol === symbol.toUpperCase());
-    if (result !== undefined) {
-      setWallet(result);
-      setLoading(false);
-      setError(false);
-    } else {
-      setError(true);
-      setLoading(false);
+    if (wallets) {
+      const result = wallets.find((w) => w.symbol === symbol.toUpperCase());
+      if (result !== undefined) {
+        setWallet(result);
+        setLoading(false);
+        setError(false);
+      } else {
+        setError(true);
+        setLoading(false);
+      }
     }
     // console.log("fetching transactions...");
     axiosInstance
@@ -148,7 +142,12 @@ const Wallet: React.FC = () => {
           duration={5000}
         />
       ) : error ? (
-        <LoadingList />
+        <IonLoading
+          cssClass="my-custom-loading"
+          isOpen={true}
+          message={"Fixing Connection..."}
+          duration={5000}
+        />
       ) : (
         <>
           <IonContent>
@@ -166,16 +165,21 @@ const Wallet: React.FC = () => {
             </IonText>
             <div className="buttons">
               <div className={`buy-sell ${symbol}`}>
-                <IonButton onClick={() => setShowModal(true)} mode="ios">
-                  <p>Deposit</p>
+                <IonButton routerLink={`/tx/exchange/${symbol}`} mode="ios">
+                  <p>Trade</p>
                 </IonButton>
-                <IonButton routerLink="/tx/withdraw" mode="ios">
+                <IonButton routerLink={`/tx/withdraw/${symbol}`} mode="ios">
                   <p>Withdraw</p>
                 </IonButton>
               </div>
             </div>
             {loadingTransactions ? (
-              <LoadingList />
+              <IonLoading
+                cssClass="my-custom-loading"
+                isOpen={true}
+                message={"Please wait..."}
+                duration={5000}
+              />
             ) : errorTransactions ? (
               <ErrorList />
             ) : (

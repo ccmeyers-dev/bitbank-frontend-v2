@@ -18,6 +18,7 @@ import { arrowBack } from "ionicons/icons";
 import "./styles/ExpertTrader.scss";
 import axiosInstance from "../../services/baseApi";
 import { useParams, useHistory } from "react-router";
+import { mutate } from "swr";
 
 const ExpertTrader = () => {
   const { goBack } = useContext(NavContext);
@@ -39,9 +40,10 @@ const ExpertTrader = () => {
       setError(true);
     } else {
       axiosInstance
-        .post(`users/set-expert/${traderId}/`, { score: score })
+        .post(`/users/set-expert/${traderId}/`, { score: score })
         .then((res) => {
           // console.log(res.data);
+          mutate(`/users/profile/?id=${userId}`);
           history.goBack();
         })
         .catch((err) => {
@@ -53,9 +55,10 @@ const ExpertTrader = () => {
   const deleteExpertTrader = () => {
     // console.log("removing status...");
     axiosInstance
-      .post(`users/remove-expert/${traderId}/`)
+      .post(`/users/remove-expert/${traderId}/`)
       .then((res) => {
         // console.log(res.data);
+        mutate(`/users/profile/?id=${userId}`);
         goBack();
       })
       .catch((err) => {

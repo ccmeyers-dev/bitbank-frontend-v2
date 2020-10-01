@@ -14,25 +14,22 @@ import Refresher from "../../components/utils/Refresher";
 import { WalletItem } from "../../components/WalletItem";
 
 //context
-import { useWallets } from "../../Context/WalletContext";
-import ErrorPage from "../../components/ErrorPage";
+import { useWallets } from "../../Hooks/WalletsHook";
 
 const Wallets: React.FC = () => {
-  const { wallets, loading, error } = useWallets();
+  const { data: wallets } = useWallets();
 
   return (
     <IonPage>
       <IonContent className="ion-padding Wallets">
         <Refresher />
-        {loading ? (
+        {!wallets ? (
           <IonLoading
             cssClass="my-custom-loading"
             isOpen={true}
             message={"Please wait..."}
             duration={5000}
           />
-        ) : error ? (
-          <ErrorPage />
         ) : (
           <>
             <IonIcon className="icon" icon={ellipsisHorizontal} />

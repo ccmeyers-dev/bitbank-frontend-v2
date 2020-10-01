@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonContent,
   IonPage,
@@ -15,7 +15,7 @@ import {
 import "./styles/Register.scss";
 import { CurrencyList } from "../../MockData/currency";
 import axiosInstance from "../../services/baseApi";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { config } from "../../app.config";
 
 interface ErrorProp {
@@ -48,7 +48,11 @@ const Register: React.FC = () => {
   const [error, setError] = useState<ErrorProp>(initialError);
   const [serverError, setServerError] = useState(false);
 
+  const [processing, setProcessing] = useState(false);
+
   const history = useHistory();
+
+  const { ref } = useParams();
 
   const validate = () => {
     let valid = true;
@@ -125,7 +129,7 @@ const Register: React.FC = () => {
   };
   const RegisterHandler = () => {
     setServerError(false);
-
+    setProcessing(true);
     // console.log("registering...");
     const isValid = validate();
 
@@ -137,11 +141,14 @@ const Register: React.FC = () => {
           last_name: lastName,
           region: region,
           gender: gender,
+          referrer: localStorage.getItem("ref"),
           password: password,
         })
         .then((res) => {
           // console.log(res.data);
           localStorage.setItem("visited", "true");
+          localStorage.removeItem("ref");
+          setProcessing(false);
           history.push("/auth/login");
         })
         .catch((err) => {
@@ -156,16 +163,24 @@ const Register: React.FC = () => {
               }
             }
           }
+          setProcessing(false);
         });
     }
   };
+
+  useEffect(() => {
+    if (ref) {
+      localStorage.setItem("ref", ref);
+    }
+  }, [ref]);
+
   return (
     <IonPage>
       <IonContent className="Register">
         <div className="form">
           <div className="header">
-            <IonRouterLink routerDirection="root" routerLink="/">
-              <IonIcon src="chainx.svg" />
+            <IonRouterLink routerDirection="root" routerLink="/home">
+              <IonIcon src="coins/steem.svg" />
             </IonRouterLink>
             <h1>Register</h1>
           </div>
@@ -270,9 +285,20 @@ const Register: React.FC = () => {
             </IonGrid>
           </div>
           <div className="button">
-            <IonButton mode="ios" expand="block" onClick={RegisterHandler}>
-              <p>Register</p>
-            </IonButton>
+            {processing ? (
+              <IonButton mode="ios" color="dark" expand="block">
+                <p>Processing...</p>
+              </IonButton>
+            ) : (
+              <IonButton
+                mode="ios"
+                color="dark"
+                expand="block"
+                onClick={RegisterHandler}
+              >
+                <p>Register</p>
+              </IonButton>
+            )}
           </div>
           <div className="help">
             Already have an account?{" "}

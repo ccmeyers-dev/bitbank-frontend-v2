@@ -24,16 +24,16 @@
     padding: 12px 0;
     p {
       font-weight: 600;
-      font-size: 16px;
-      padding-left: 16px;
+      font-size: 14px;
+      padding-left: 12px;
     }
     .address {
       @include flex(space-around);
-      background-color: rgba(172, 172, 172, 0.185);
+      background-color: rgba(129, 129, 129, 0.103);
       margin: auto;
       margin-top: 12px;
       padding: 0 4px;
-      border-radius: 24px;
+      border-radius: 12px;
       p {
         font-size: 14px;
         font-weight: 500;
@@ -47,25 +47,30 @@
         background: rgba(0, 0, 0, 0);
       }
     }
-    ion-button {
-      margin: 12px 0;
-      height: 42px;
-      --border-radius: 24px;
+    .update {
+      background-color: rgba(138, 138, 138, 0.219);
+      width: 100%;
+      text-align: center;
+      border-radius: 12px;
+      margin: 24px 0;
       p {
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        padding: 12px;
+        color: var(--ion-text-color, black);
       }
       &.Bitcoin {
-        --background: rgb(252, 143, 19);
+        background-color: rgba(243, 190, 76, 0.5);
       }
       &.Ethereum {
-        --background: rgb(128, 82, 236);
+        background-color: rgba(153, 114, 243, 0.5);
       }
       &.Litecoin {
-        --background: rgb(107, 99, 117);
+        background-color: rgba(156, 151, 161, 0.5);
       }
       &.Ripple {
-        --background: rgb(0, 96, 151);
+        background-color: rgba(95, 183, 235, 0.5);
       }
     }
   }

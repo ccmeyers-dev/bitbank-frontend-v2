@@ -8,7 +8,6 @@ import {
   IonItem,
   IonListHeader,
   IonText,
-  IonAvatar,
   IonBadge,
   IonIcon,
   IonSlides,
@@ -19,22 +18,23 @@ import {
   IonRouterLink,
   IonLoading,
 } from "@ionic/react";
-import { checkmarkDoneCircle, closeOutline } from "ionicons/icons";
+import { checkmarkDoneCircle } from "ionicons/icons";
 import "./styles/Home.scss";
 import Refresher from "../../components/utils/Refresher";
 import { ExchangeItemProp } from "../../Interfaces/ExchangeItem";
 
 //mock data
 
-import { useProfile } from "../../Context/ProfileContext";
 import { toCurrency } from "../../components/utils/Utils";
-import { useWallets } from "../../Context/WalletContext";
-import ErrorPage from "../../components/ErrorPage";
-import { useExchange } from "../../Context/Hooks/ExchangeHook";
+import { useExchange } from "../../Hooks/ExchangeHook";
 import { config } from "../../app.config";
+import { useProfile } from "../../Hooks/ProfileHook";
+import { DummyWallets } from "../../MockData/wallets";
 
 const ExchangeItem: React.FC<ExchangeItemProp> = ({ wallet, symbol }) => {
   const { usd, usd_24h_change } = useExchange(symbol);
+
+  const change = usd_24h_change ?? 0;
 
   return (
     <IonItem
@@ -42,9 +42,8 @@ const ExchangeItem: React.FC<ExchangeItemProp> = ({ wallet, symbol }) => {
       className="ion-no-padding"
       detail
     >
-      <IonAvatar slot="start">
-        <img src={`${wallet}.png`} alt="" />
-      </IonAvatar>
+      <IonIcon src={`coins/${wallet}.svg`} />
+
       <IonLabel className="coin-label">
         <IonText>
           <h3>{wallet}</h3>
@@ -54,19 +53,20 @@ const ExchangeItem: React.FC<ExchangeItemProp> = ({ wallet, symbol }) => {
       <IonLabel className="ion-text-end coin-price" slot="end">
         <IonText>
           <p>${toCurrency(usd, symbol)}</p>
-          {usd_24h_change > 0 ? (
-            <IonBadge class="high">+{usd_24h_change.toFixed(2)}</IonBadge>
-          ) : (
-            <IonBadge class="low">{usd_24h_change.toFixed(2)}</IonBadge>
-          )}
+          <IonBadge class={change > 0 ? "high" : "low"}>
+            {change > 0 && "+"}
+            {change.toFixed(2)}
+          </IonBadge>
         </IonText>
       </IonLabel>
     </IonItem>
   );
 };
 const Home: React.FC = () => {
-  const { profile, loading, error } = useProfile();
-  const { wallets } = useWallets();
+  const { data: profile } = useProfile();
+  // const { data: wallets } = useWallets();
+
+  const wallets = DummyWallets;
 
   useEffect(() => {
     const swapText = setInterval(() => {
@@ -82,22 +82,20 @@ const Home: React.FC = () => {
     return () => {
       clearInterval(swapText);
     };
-  }, [profile, loading]);
+  }, [profile]);
 
   return (
     <IonPage>
       <IonContent className="ion-padding Home">
         <Refresher />
 
-        {loading ? (
+        {!profile ? (
           <IonLoading
             cssClass="my-custom-loading"
             isOpen={true}
             message={"Please wait..."}
             duration={5000}
           />
-        ) : error ? (
-          <ErrorPage />
         ) : (
           <>
             <IonText className="quick-balance">
@@ -157,33 +155,35 @@ const Home: React.FC = () => {
 
             <div>
               <IonSlides pager={true}>
-                {wallets.map(({ wallet, symbol, id }) => (
-                  <IonSlide key={id} className="slide-item">
-                    <IonCard>
-                      <IonIcon icon={closeOutline} />
-                      <IonCardContent>
-                        <IonItem
-                          routerLink={`/tx/wallet/${symbol.toLowerCase()}`}
-                          lines="full"
-                        >
-                          <IonAvatar>
-                            <img src={`${wallet}.png`} alt="" />
-                          </IonAvatar>
-                          <IonText>
-                            <h3>{wallet} wallet</h3>
-                            <p>
-                              Trade, withdraw, and deposit from your{" "}
-                              {wallet.toLowerCase()} today
-                            </p>
-                          </IonText>
-                        </IonItem>
-                        <IonRouterLink routerLink="/tx/withdraw/">
-                          <p>Withdraw {symbol}</p>
-                        </IonRouterLink>
-                      </IonCardContent>
-                    </IonCard>
-                  </IonSlide>
-                ))}
+                {wallets &&
+                  wallets.map(({ wallet, symbol, id }) => (
+                    <IonSlide key={id} className="slide-item">
+                      <IonCard>
+                        <IonCardContent>
+                          <IonItem
+                            routerLink={`/tx/wallet/${symbol.toLowerCase()}`}
+                            lines="full"
+                          >
+                            <div className="icon">
+                              <IonIcon src={`coins/${wallet}.svg`} />
+                            </div>
+                            <IonText>
+                              <h3>{wallet} wallet</h3>
+                              <p>
+                                Trade, withdraw, and deposit from your{" "}
+                                {wallet.toLowerCase()} wallet today
+                              </p>
+                            </IonText>
+                          </IonItem>
+                          <IonRouterLink
+                            routerLink={`/tx/withdraw/${symbol.toLowerCase()}`}
+                          >
+                            <p>Withdraw {symbol}</p>
+                          </IonRouterLink>
+                        </IonCardContent>
+                      </IonCard>
+                    </IonSlide>
+                  ))}
               </IonSlides>
             </div>
 
@@ -194,9 +194,10 @@ const Home: React.FC = () => {
               <IonBadge color="light">1D</IonBadge>
             </IonListHeader>
             <IonList className="exchanges" lines="none">
-              {wallets.map(({ wallet, symbol, id }) => (
-                <ExchangeItem key={id} wallet={wallet} symbol={symbol} />
-              ))}
+              {wallets &&
+                wallets.map(({ wallet, symbol, id }) => (
+                  <ExchangeItem key={id} wallet={wallet} symbol={symbol} />
+                ))}
             </IonList>
           </>
         )}

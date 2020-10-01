@@ -28,20 +28,12 @@ import TransactionHistory from "./Tabs/TransactionHistory";
 const Tabs: React.FC = () => (
   <IonTabs>
     <IonRouterOutlet>
-      <Route path="/en/home" component={Home} exact={true} />
-      <Route path="/en/wallets" component={Wallets} exact={true} />
-      <Route path="/en/charts" component={Charts} exact={true} />
-      <Route
-        path="/en/transaction-history"
-        component={TransactionHistory}
-        exact={true}
-      />
+      <Route path="/en/home" component={Home} />
+      <Route path="/en/wallets" component={Wallets} />
+      <Route path="/en/charts" component={Charts} />
+      <Route path="/en/transaction-history" component={TransactionHistory} />
       <Route path="/en/settings" component={Settings} />
-      <Route
-        path="/en"
-        render={() => <Redirect to="/en/home" />}
-        exact={true}
-      />
+      <Route path="/en" render={() => <Redirect to="/en/home" />} exact />
     </IonRouterOutlet>
     <IonTabBar className="tabs" slot="bottom">
       <IonTabButton tab="Home" href="/en/home">

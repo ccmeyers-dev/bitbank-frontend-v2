@@ -7,7 +7,6 @@ import {
   IonToolbar,
   IonHeader,
   IonTitle,
-  IonAvatar,
   IonFooter,
   NavContext,
 } from "@ionic/react";
@@ -15,25 +14,22 @@ import "./styles/Exchange.scss";
 import { arrowBack } from "ionicons/icons";
 import { useParams } from "react-router";
 import Refresher from "../../components/utils/Refresher";
-import { useProfile } from "../../Context/ProfileContext";
-import { useWallets } from "../../Context/WalletContext";
-import { useCoinValue } from "../../Context/Hooks/CoinValueHook";
+import { useCoinValue } from "../../Hooks/CoinValueHook";
+import { useWallets } from "../../Hooks/WalletsHook";
+import { ExchangeWidget } from "../Widgets/ExchangeWidget";
+import { useProfile } from "../../Hooks/ProfileHook";
 
 const Exchange: React.FC = () => {
   const [wallet, setWallet] = useState<any>({});
 
-  const { wallets } = useWallets();
+  const { data: wallets } = useWallets();
 
   const { goBack } = useContext(NavContext);
 
   const { exchange } = useParams();
   const market = exchange.toUpperCase();
 
-  const {
-    profile,
-    loading: loadingProfile,
-    error: errorProfile,
-  } = useProfile();
+  const { data: profile } = useProfile();
 
   const available = () => {
     switch (exchange) {
@@ -49,45 +45,23 @@ const Exchange: React.FC = () => {
         return 0.0;
     }
   };
-  const walletBalance = loadingProfile
-    ? "0.00"
-    : errorProfile
-    ? "0.00"
-    : available()!.toFixed(2);
+  const walletBalance = !profile ? "0.00" : available()!.toFixed(2);
 
   const themeMode = localStorage.getItem("theme") === "dark" ? "dark" : "light";
 
   useEffect(() => {
-    const result = wallets.find((w) => w.symbol === market.toUpperCase());
-    if (result !== undefined) {
-      setWallet(result);
+    if (wallets) {
+      const result = wallets.find((w) => w.symbol === market.toUpperCase());
+      if (result) {
+        setWallet(result);
+      }
     }
 
     // console.log(`starting exchange at BITBAY:BTC${market}|12m...`);
 
     const scriptConfig = document.createElement("script");
 
-    scriptConfig.innerHTML = `
-    new TradingView.MediumWidget({
-      symbols: [
-        [
-          "BITBAY:${market}USD|12m"
-        ],
-    
-      ],
-      chartOnly: false,
-      width: "100%",
-      height: "100%",
-      locale: "en",
-      colorTheme: "${themeMode}",
-      gridLineColor: "#F0F3FA",
-      trendLineColor: "#2196F3",
-      fontColor: "#787B86",
-      underLineColor: "#E3F2FD",
-      isTransparent: false,
-      autosize: true,
-      container_id: "ticker",
-    })`;
+    scriptConfig.innerHTML = ExchangeWidget(market, themeMode);
 
     document.getElementById("chart")?.appendChild(scriptConfig);
 
@@ -130,9 +104,7 @@ const Exchange: React.FC = () => {
           <div className="footer">
             <div className="balance">
               <div className="coin">
-                <IonAvatar>
-                  <img src={`${wallet.wallet}.png`} alt="" />
-                </IonAvatar>
+                <IonIcon src={`coins/${wallet.wallet}.svg`} />
                 <p>{market} Wallet</p>
               </div>
               <div className="amount">

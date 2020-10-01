@@ -25,9 +25,11 @@ import Refresher from "../../components/utils/Refresher";
 import { arrowBack, arrowDown, closeCircle } from "ionicons/icons";
 import "./styles/Deposit.scss";
 import axiosInstance from "../../services/baseApi";
-import { LoadingList, ErrorList } from "../../components/ListLoader";
-import { useWallets } from "../../Context/WalletContext";
+import { LoadingList } from "../../components/ListLoader";
 import { useParams } from "react-router";
+import { useWallets } from "../../Hooks/WalletsHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
+import { mutate } from "swr";
 
 interface AddDepositItem {
   amount: number | null;
@@ -57,9 +59,6 @@ const InitialDeposit: DepositItem = {
 
 const Deposit = () => {
   const { goBack } = useContext(NavContext);
-  const [deposits, setDeposits] = useState<DepositItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   const [showToast, setShowToast] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
@@ -71,10 +70,17 @@ const Deposit = () => {
 
   const [showDeleteToast, setShowDeleteToast] = useState(false);
 
-  const { wallets, loading: loadingWallets } = useWallets();
+  const { data: wallets } = useWallets();
 
   //test
   const { id: userId } = useParams();
+
+  const {
+    data: deposits,
+    update,
+  }: { data: DepositItem[]; update: () => void } = useSecureRequest(
+    `/users/deposits/?id=${userId}`
+  );
 
   const newDeposit = () => {
     // console.log("posting Deposit...");
@@ -82,11 +88,13 @@ const Deposit = () => {
       // console.log("incomplete post data");
     } else {
       axiosInstance
-        .post("users/deposits/", addDeposit)
+        .post("/users/deposits/", addDeposit)
         .then((res) => {
           // console.log(res.data);
           setShowAddDepositModal(false);
           setShowAddToast(true);
+          update();
+          mutate(`/users/profile/?id=${userId}`);
         })
         .catch((err) => {
           // console.log(err.response);
@@ -102,11 +110,13 @@ const Deposit = () => {
   const updateDeposit = () => {
     // console.log("updating Deposit...");
     axiosInstance
-      .put(`users/deposits/${selectDeposit.id}/`, selectDeposit)
+      .put(`/users/deposits/${selectDeposit.id}/`, selectDeposit)
       .then((res) => {
         // console.log(res.data);
         setShowDepositModal(false);
         setShowToast(true);
+        update();
+        mutate(`/users/profile/?id=${userId}`);
       })
       .catch((err) => {
         // console.log(err.response);
@@ -116,11 +126,13 @@ const Deposit = () => {
   const deleteDeposit = () => {
     // console.log("deleting Deposit...");
     axiosInstance
-      .delete(`users/deposits/${selectDeposit.id}/`)
+      .delete(`/users/deposits/${selectDeposit.id}/`)
       .then((res) => {
         // console.log(res.data);
         setShowDepositModal(false);
         setShowDeleteToast(true);
+        update();
+        mutate(`/users/profile/?id=${userId}`);
       })
       .catch((err) => {
         // console.log(err.response);
@@ -128,28 +140,17 @@ const Deposit = () => {
   };
 
   const getWallet = (id: number) => {
-    const result = wallets.find((w) => w.id === id);
-    return result?.wallet;
+    let result = null;
+    if (wallets) {
+      result = wallets.find((w) => w.id === id);
+    }
+    return result ? result?.wallet : "";
   };
 
   useEffect(() => {
     // console.log("setting user " + userId);
     setAddDeposit((current) => ({ ...current, portfolio: userId }));
-    // console.log("fetching deposits...");
-    axiosInstance
-      .get("users/deposits/?id=" + userId)
-      .then((res) => {
-        setDeposits(res.data);
-        // console.log(res.data);
-        setError(false);
-        setLoading(false);
-      })
-      .catch((err) => {
-        // console.log(err.response);
-        setError(true);
-        setLoading(false);
-      });
-  }, [showToast, showAddToast, showDeleteToast, userId]);
+  }, [userId, wallets]);
 
   return (
     <IonPage className="AdminDeposit">
@@ -168,30 +169,32 @@ const Deposit = () => {
           isOpen={showToast}
           onDidDismiss={() => setShowToast(false)}
           message="Deposit updated successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showAddToast}
           onDidDismiss={() => setShowAddToast(false)}
           message="Deposit added successfully"
-          duration={2000}
+          duration={1000}
         />
         <IonToast
           isOpen={showDeleteToast}
           onDidDismiss={() => setShowDeleteToast(false)}
           message="Deposit deleted successfully"
-          duration={2000}
+          duration={1000}
         />
 
         <div className="button">
-          <IonButton mode="ios" onClick={() => setShowAddDepositModal(true)}>
+          <IonButton
+            color="success"
+            mode="ios"
+            onClick={() => setShowAddDepositModal(true)}
+          >
             Add Deposit
           </IonButton>
         </div>
-        {loading ? (
+        {!deposits ? (
           <LoadingList />
-        ) : error ? (
-          <ErrorList />
         ) : (
           <IonList mode="ios">
             {deposits.length > 0 ? (
@@ -339,7 +342,7 @@ const Deposit = () => {
                           }));
                         }}
                       >
-                        {!loadingWallets &&
+                        {wallets &&
                           wallets.map(({ wallet, id }) => (
                             <IonSelectOption key={id} value={id}>
                               {wallet}
