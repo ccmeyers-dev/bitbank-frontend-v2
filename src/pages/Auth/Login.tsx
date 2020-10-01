@@ -26,8 +26,8 @@ const Login: React.FC = () => {
   const loginHandler = () => {
     setError(false);
     setServerError(false);
-    setProcessing(true);
     if (email && password) {
+      setProcessing(true);
       axiosInstance
         .post("auth/token/obtain/", {
           email: email.toLowerCase(),

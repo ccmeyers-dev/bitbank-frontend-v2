@@ -129,11 +129,11 @@ const Register: React.FC = () => {
   };
   const RegisterHandler = () => {
     setServerError(false);
-    setProcessing(true);
     // console.log("registering...");
     const isValid = validate();
 
     if (isValid) {
+      setProcessing(true);
       axiosInstance
         .post("auth/user/create/", {
           email: email.toLowerCase(),
