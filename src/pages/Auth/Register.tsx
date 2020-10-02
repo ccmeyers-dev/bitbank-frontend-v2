@@ -286,7 +286,7 @@ const Register: React.FC = () => {
           </div>
           <div className="button">
             {processing ? (
-              <IonButton mode="ios" color="dark" expand="block">
+              <IonButton mode="ios" expand="block">
                 <p>Processing...</p>
               </IonButton>
             ) : (
