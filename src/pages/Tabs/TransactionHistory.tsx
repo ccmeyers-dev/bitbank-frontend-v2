@@ -89,8 +89,6 @@ const TransactionHistory: React.FC = () => {
 
   const { data: allTransactions } = useSecureRequest("/users/transactions/");
 
-  // const [transactions, setTransactions] = useState([]);
-
   let transactions: TransactionItemProp[];
   if (wallet !== "All") {
     const results = allTransactions.filter((tx: any) => tx.wallet === wallet);
@@ -98,9 +96,6 @@ const TransactionHistory: React.FC = () => {
   } else {
     transactions = allTransactions;
   }
-
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(false);
 
   const transactionToast = async (amount: number, order: string) => {
     const toast = document.createElement("ion-toast");
@@ -140,25 +135,6 @@ const TransactionHistory: React.FC = () => {
   const walletBalance = (symbol: string) =>
     !profile ? "0.00" : available(symbol)!.toFixed(2);
 
-  // useEffect(() => {
-  //   // console.log("fetching transactions...");
-  //   axiosInstance
-  //     .get("users/transactions/")
-  //     .then((res: any) => {
-  //       if (wallet !== "All") {
-  //         const results = res.data.filter((tx: any) => tx.wallet === wallet);
-  //         setTransactions(results);
-  //       } else {
-  //         setTransactions(res.data);
-  //       }
-  //       setError(false);
-  //       setLoading(false);
-  //     })
-  //     .catch((err: any) => {
-  //       setError(true);
-  //       setLoading(false);
-  //     });
-  // }, [wallet]);
   return (
     <IonPage className="TransactionHistory">
       <IonContent>

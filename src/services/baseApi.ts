@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // const baseURL = "http://172.20.10.2:8000/api";
-const baseURL = "https://steemtrade.pythonanywhere.com/api";
+// const baseURL = "https://steemtrade.pythonanywhere.com/api";
 // const baseURL = "http://192.168.43.58:8000/api";
-// const baseURL = "http://127.0.0.1:8000/api";
+const baseURL = "http://127.0.0.1:8000/api";
 
 const accessToken = localStorage.getItem("access_token");
 const refreshToken = localStorage.getItem("refresh_token");
@@ -82,6 +82,8 @@ axiosInstance.interceptors.response.use(
             });
         } else {
           console.log("Refresh token must be expired");
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
           window.location.href = "/auth/login/";
         }
       } else {

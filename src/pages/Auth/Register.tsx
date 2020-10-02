@@ -135,7 +135,7 @@ const Register: React.FC = () => {
     if (isValid) {
       setProcessing(true);
       axiosInstance
-        .post("auth/user/create/", {
+        .post("/auth/user/create/", {
           email: email.toLowerCase(),
           first_name: firstName,
           last_name: lastName,
@@ -145,7 +145,6 @@ const Register: React.FC = () => {
           password: password,
         })
         .then((res) => {
-          // console.log(res.data);
           localStorage.setItem("visited", "true");
           localStorage.removeItem("ref");
           setProcessing(false);
@@ -163,6 +162,7 @@ const Register: React.FC = () => {
               }
             }
           }
+          // console.log("err res", err.response);
           setProcessing(false);
         });
     }
@@ -290,12 +290,7 @@ const Register: React.FC = () => {
                 <p>Processing...</p>
               </IonButton>
             ) : (
-              <IonButton
-                mode="ios"
-                color="dark"
-                expand="block"
-                onClick={RegisterHandler}
-              >
+              <IonButton mode="ios" expand="block" onClick={RegisterHandler}>
                 <p>Register</p>
               </IonButton>
             )}

@@ -59,8 +59,9 @@
         --border-radius: 28px;
         --padding-top: 28px;
         --padding-bottom: 28px;
-        --background: rgb(28, 26, 32);
-        --background-activated: rgb(37, 35, 41);
+        --background: rgb(93, 147, 209);
+        --background-activated: rgb(64, 129, 204);
+        --background-hover: rgb(64, 129, 204);
         p {
           font-size: 16px;
           font-weight: 600;
@@ -71,7 +72,7 @@
       margin-top: 24px;
       text-align: center;
       ion-router-link {
-        color: rgb(43, 119, 233);
+        color: rgb(74, 148, 233);
         font-weight: 600;
       }
     }

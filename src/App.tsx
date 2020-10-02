@@ -53,10 +53,16 @@ export const isAuthenticated = () => {
 
     if (exp < new Date().getTime() / 1000) {
       console.log("JWT token expired", exp, new Date().getTime() / 1000);
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      window.location.href = "/auth/login/";
       return false;
     }
   } catch (e) {
     console.log("JWT token decode error");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    window.location.href = "/auth/login/";
     return false;
   }
 

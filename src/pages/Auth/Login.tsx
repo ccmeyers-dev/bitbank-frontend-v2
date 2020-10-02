@@ -29,7 +29,7 @@ const Login: React.FC = () => {
     if (email && password) {
       setProcessing(true);
       axiosInstance
-        .post("auth/token/obtain/", {
+        .post("/auth/token/obtain/", {
           email: email.toLowerCase(),
           password: password,
         })
@@ -98,12 +98,7 @@ const Login: React.FC = () => {
                 <p>Processing...</p>
               </IonButton>
             ) : (
-              <IonButton
-                mode="ios"
-                color="dark"
-                expand="block"
-                onClick={loginHandler}
-              >
+              <IonButton mode="ios" expand="block" onClick={loginHandler}>
                 <p>Login</p>
               </IonButton>
             )}

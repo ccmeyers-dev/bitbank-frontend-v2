@@ -22,11 +22,11 @@ import { TransactionItemProp } from "../../Interfaces/Transaction";
 import { useParams } from "react-router";
 
 //mock data
-import axiosInstance from "../../services/baseApi";
 import { useCoinValue } from "../../Hooks/CoinValueHook";
-import { ErrorList } from "../../components/ListLoader";
+import { ErrorList, LoadingList } from "../../components/ListLoader";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 const Wallet: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -35,11 +35,6 @@ const Wallet: React.FC = () => {
   const [wallet, setWallet] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
-  const [transactions, setTransactions] = useState([]);
-
-  const [loadingTransactions, setLoadingTransactions] = useState(true);
-  const [errorTransactions, setErrorTransactions] = useState(false);
 
   const { goBack } = useContext(NavContext);
 
@@ -66,6 +61,18 @@ const Wallet: React.FC = () => {
   const { data: wallets } = useWallets();
 
   const { data: profile } = useProfile();
+
+  const { data: allTransactions } = useSecureRequest("/users/transactions/");
+
+  let transactions: TransactionItemProp[];
+  if (symbol && allTransactions) {
+    const results = allTransactions.filter(
+      (tx: any) => tx.wallet === symbol.toUpperCase()
+    );
+    transactions = results;
+  } else {
+    transactions = [];
+  }
 
   const available = () => {
     switch (symbol) {
@@ -98,23 +105,7 @@ const Wallet: React.FC = () => {
         setLoading(false);
       }
     }
-    // console.log("fetching transactions...");
-    axiosInstance
-      .get("users/transactions/")
-      .then((res) => {
-        const results = res.data.filter(
-          (tx: any) => tx.wallet === symbol.toUpperCase()
-        );
-        // console.log(results);
-        setTransactions(results);
-        setErrorTransactions(false);
-        setLoadingTransactions(false);
-      })
-      .catch((err) => {
-        setErrorTransactions(true);
-        setLoadingTransactions(false);
-      });
-  }, [symbol, wallets, wallet, loading, error]);
+  }, [symbol, wallets]);
 
   const balance = useCoinValue(symbol.toUpperCase(), parseFloat(walletBalance));
 
@@ -138,16 +129,11 @@ const Wallet: React.FC = () => {
         <IonLoading
           cssClass="my-custom-loading"
           isOpen={true}
-          message={"Please wait..."}
+          message={"Loading wallet..."}
           duration={5000}
         />
       ) : error ? (
-        <IonLoading
-          cssClass="my-custom-loading"
-          isOpen={true}
-          message={"Fixing Connection..."}
-          duration={5000}
-        />
+        <ErrorList />
       ) : (
         <>
           <IonContent>
@@ -173,15 +159,8 @@ const Wallet: React.FC = () => {
                 </IonButton>
               </div>
             </div>
-            {loadingTransactions ? (
-              <IonLoading
-                cssClass="my-custom-loading"
-                isOpen={true}
-                message={"Please wait..."}
-                duration={5000}
-              />
-            ) : errorTransactions ? (
-              <ErrorList />
+            {!allTransactions ? (
+              <LoadingList />
             ) : (
               <IonList mode="ios">
                 {transactions.length > 0 ? (
