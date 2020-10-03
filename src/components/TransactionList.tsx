@@ -19,7 +19,8 @@ export const TransactionDetailList: React.FC<DetailListProp> = ({market, progres
             <div className="currency">{market}USD, &nbsp;</div>
             <div className={`order ${order}`}>{order} {capital}</div>
           </div>
-          <p>{duration!.toFixed(4)} -> {(duration! * (progress!/100)).toFixed(4)}</p>
+          {/* <p>{duration!.toFixed(4)} -> {(duration! * (progress!/100)).toFixed(4)}</p> */}
+          <p>open -> {duration!}D | {progress!.toFixed(2)}%</p>
         </div>
         <div className="amount">
           <h5>+{current}</h5>
