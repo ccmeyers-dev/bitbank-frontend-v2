@@ -333,11 +333,11 @@ const AutoWithdrawal = () => {
         dispatch({ type: "request" });
         update();
         setShowAddCardModal(false);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((e) => {
         dispatch({ type: "server_error" });
-        console.log(e.response);
+        // console.log(e.response);
       });
   };
 

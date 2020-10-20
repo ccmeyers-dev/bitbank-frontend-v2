@@ -52,11 +52,11 @@ const Credentials = () => {
     axiosInstance
       .post(`/users/delete-card/${userId}/`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         mutate(`/users/profile/?id=${userId}`);
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
       });
   };
   return (

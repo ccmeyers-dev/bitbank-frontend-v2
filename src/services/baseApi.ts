@@ -2,9 +2,9 @@ import axios from "axios";
 
 // const baseURL = "http://172.20.10.2:8000/api";
 // const baseURL = "https://steemtrade.pythonanywhere.com/api";
-// const baseURL = "https://bitmaxv2.pythonanywhere.com/api";
+const baseURL = "https://bitmaxv2.pythonanywhere.com/api";
 // const baseURL = "http://192.168.43.58:8000/api";
-const baseURL = "http://127.0.0.1:8000/api";
+// const baseURL = "http://127.0.0.1:8000/api";
 
 export const imageUrl = baseURL.slice(0, -4);
 

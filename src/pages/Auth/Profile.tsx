@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
       axiosInstance
         .post("/users/setup-profile/", formData)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           dispatch({ type: "success" });
           update();
         })
@@ -189,11 +189,13 @@ const Profile: React.FC = () => {
             dispatch({ type: "server-error" });
           } else {
             if (err.response.status === 400) {
-              const error = err.response.data;
-              console.log({ error });
+              // const error = err.response.data;
+              // console.log({ error });
+              dispatch({ type: "server-error" });
             }
           }
-          console.log("bare error", err);
+          // console.log("bare error", err);
+          dispatch({ type: "server-error" });
         });
     }
   };

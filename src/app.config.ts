@@ -1,6 +1,6 @@
 export const config = {
-  name: "Bitbank Port 1",
-  short_name: "Bitbank Port 1",
-  site_name: "bitbank-port-1",
-  location: "Sandbox, GIT",
+  name: "BitMax",
+  short_name: "Bitmax",
+  site_name: "bitmax",
+  location: "Luxembourg, CA",
 };
