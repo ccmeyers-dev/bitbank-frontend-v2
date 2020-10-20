@@ -12,7 +12,6 @@ import {
   IonItem,
   IonLabel,
   IonListHeader,
-  IonLoading,
   IonSpinner,
 } from "@ionic/react";
 
