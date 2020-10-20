@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { IonButton, IonIcon, IonRouterLink } from "@ionic/react";
+import { IonButton, IonIcon } from "@ionic/react";
 import "./styles/HomePage.scss";
-import { checkmarkCircle, menu } from "ionicons/icons";
+import { checkmarkCircle } from "ionicons/icons";
 import { config } from "../../app.config";
-import usePlainRequest from "../../Hooks/PlainRequest";
 import {
   HomePageTicker,
   HomePageTickerScript,

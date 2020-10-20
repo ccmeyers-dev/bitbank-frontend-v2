@@ -7,12 +7,7 @@ import {
   IonRouterLink,
 } from "@ionic/react";
 import "./styles/HomePage.scss";
-import {
-  logoBitcoin,
-  chevronBack,
-  cashOutline,
-  sendOutline,
-} from "ionicons/icons";
+import { logoBitcoin, cashOutline, sendOutline } from "ionicons/icons";
 
 import { config } from "../../app.config";
 
