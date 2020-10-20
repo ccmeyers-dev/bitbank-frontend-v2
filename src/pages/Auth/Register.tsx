@@ -11,9 +11,9 @@ import {
   IonCol,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
 } from "@ionic/react";
 import "./styles/Register.scss";
-import { CurrencyList } from "../../MockData/currency";
 import axiosInstance from "../../services/baseApi";
 import { useHistory, useParams } from "react-router";
 import { config } from "../../app.config";
@@ -23,7 +23,6 @@ interface ErrorProp {
   firstName: string | null;
   lastName: string | null;
   gender: string | null;
-  region: string | null;
   password: string | null;
 }
 
@@ -32,7 +31,6 @@ const initialError = {
   firstName: null,
   lastName: null,
   gender: null,
-  region: null,
   password: null,
 };
 
@@ -41,7 +39,6 @@ const Register: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
-  const [region, setRegion] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -58,14 +55,13 @@ const Register: React.FC = () => {
     let valid = true;
     let formErrors: ErrorProp = initialError;
 
-    const pwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/;
+    const pwd = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
 
     // handle inconsistent fields
     if (pwd.test(password) === false) {
       formErrors = {
         ...formErrors,
-        password:
-          "Password should contain at least an Upper case character, a Lower case character and a Number",
+        password: "Password should contain characters and at least a number",
       };
       valid = false;
     }
@@ -85,42 +81,25 @@ const Register: React.FC = () => {
       valid = false;
     }
 
-    // handle spaces in name
-    if (firstName.includes(" ")) {
-      formErrors = {
-        ...formErrors,
-        firstName: "Cannot contain spaces",
-      };
-      valid = false;
-    }
-    if (lastName.includes(" ")) {
-      formErrors = { ...formErrors, lastName: "Cannot contain spaces" };
-      valid = false;
-    }
-
     // handle empty fields
-    if (email === "") {
-      formErrors = { ...formErrors, email: "Enter email address" };
+    if (!email) {
+      formErrors = { ...formErrors, email: "Email Required" };
       valid = false;
     }
-    if (firstName === "") {
-      formErrors = { ...formErrors, firstName: "Enter first name" };
+    if (!firstName) {
+      formErrors = { ...formErrors, firstName: "First Name Required" };
       valid = false;
     }
-    if (lastName === "") {
-      formErrors = { ...formErrors, lastName: "Enter last name" };
+    if (!lastName) {
+      formErrors = { ...formErrors, lastName: "Last Name Required" };
       valid = false;
     }
-    if (gender === "") {
-      formErrors = { ...formErrors, gender: "Enter gender" };
+    if (!gender) {
+      formErrors = { ...formErrors, gender: "Gender Required" };
       valid = false;
     }
-    if (region === "") {
-      formErrors = { ...formErrors, region: "Enter region" };
-      valid = false;
-    }
-    if (password === "") {
-      formErrors = { ...formErrors, password: "Enter password" };
+    if (!password) {
+      formErrors = { ...formErrors, password: "Password Required" };
       valid = false;
     }
 
@@ -139,7 +118,6 @@ const Register: React.FC = () => {
           email: email.toLowerCase(),
           first_name: firstName,
           last_name: lastName,
-          region: region,
           gender: gender,
           referrer: localStorage.getItem("ref"),
           password: password,
@@ -180,7 +158,7 @@ const Register: React.FC = () => {
         <div className="form">
           <div className="header">
             <IonRouterLink routerDirection="root" routerLink="/home">
-              <IonIcon src="coins/steem.svg" />
+              <IonIcon src="coins/logo.svg" />
             </IonRouterLink>
             <h1>Register</h1>
           </div>
@@ -194,7 +172,6 @@ const Register: React.FC = () => {
                     value={email}
                     placeholder="Email address"
                     onIonChange={(e) => setEmail(e.detail.value!)}
-                    clearInput
                   />
                 </IonCol>
               </IonRow>
@@ -207,7 +184,6 @@ const Register: React.FC = () => {
                     value={firstName}
                     placeholder="First Name"
                     onIonChange={(e) => setFirstName(e.detail.value!)}
-                    clearInput
                   />
                   <p className="error">{error.firstName}</p>
                 </IonCol>
@@ -218,7 +194,6 @@ const Register: React.FC = () => {
                     value={lastName}
                     placeholder="Last Name"
                     onIonChange={(e) => setLastName(e.detail.value!)}
-                    clearInput
                   />
                   <p className="error">{error.lastName}</p>
                 </IonCol>
@@ -237,21 +212,6 @@ const Register: React.FC = () => {
                     <IonSelectOption value="other">Other</IonSelectOption>
                   </IonSelect>
                   <p className="error">{error.gender}</p>
-                </IonCol>
-                <IonCol>
-                  <IonSelect
-                    value={region}
-                    placeholder="Region"
-                    name="region"
-                    onIonChange={(e) => setRegion(e.detail.value)}
-                  >
-                    {CurrencyList.map((country, i) => (
-                      <IonSelectOption key={i} value={country.name}>
-                        {country.name}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
-                  <p className="error">{error.region}</p>
                 </IonCol>
               </IonRow>
               <IonRow>
@@ -287,7 +247,8 @@ const Register: React.FC = () => {
           <div className="button">
             {processing ? (
               <IonButton mode="ios" expand="block">
-                <p>Processing...</p>
+                <p>Submitting</p>
+                <IonSpinner name="crescent" />
               </IonButton>
             ) : (
               <IonButton mode="ios" expand="block" onClick={RegisterHandler}>

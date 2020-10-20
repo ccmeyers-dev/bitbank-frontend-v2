@@ -1,0 +1,35 @@
+@import "../../../../theme/mixins";
+
+.NotificationInstance {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+
+  .content {
+    padding: 16px;
+    max-width: 800px;
+    margin: auto;
+    .message {
+      padding: 12px;
+      font-weight: 400;
+      font-size: 15px;
+      font-weight: 600;
+      opacity: 0.8;
+      white-space: pre-wrap;
+    }
+  }
+  .status {
+    text-align: center;
+    margin-top: 32px;
+    p {
+      color: rgb(36, 131, 219);
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}

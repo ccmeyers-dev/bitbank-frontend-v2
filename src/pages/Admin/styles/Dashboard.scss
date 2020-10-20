@@ -149,6 +149,13 @@
       }
       p {
         font-size: 10px;
+        font-weight: 700;
+        .trades {
+          color: rgb(65, 184, 124);
+        }
+        .withdrawals {
+          color: rgb(255, 88, 88);
+        }
       }
     }
   }

@@ -13,6 +13,7 @@ import {
   IonLabel,
   IonListHeader,
   IonLoading,
+  IonSpinner,
 } from "@ionic/react";
 
 // styles
@@ -54,7 +55,7 @@ const WalletSelector: React.FC<WalletSelectorProp> = ({
       case "XRP":
         return "ripple";
       default:
-        return "steem";
+        return "logo";
     }
   };
   return (
@@ -141,12 +142,9 @@ const TransactionHistory: React.FC = () => {
         {/* refresher */}
         <Refresher />
         {!allTransactions ? (
-          <IonLoading
-            cssClass="my-custom-loading"
-            isOpen={true}
-            message={"Please wait..."}
-            duration={5000}
-          />
+          <div className="loading-spinner">
+            <IonSpinner color="primary" name="crescent" />
+          </div>
         ) : (
           <>
             <IonListHeader>

@@ -27,6 +27,19 @@
       }
       ion-text {
         @include flex(space-between);
+        .badge {
+          @include flex(center);
+          background-color: rgb(100, 149, 255);
+          border-radius: 50%;
+          width: 22px;
+          height: 22px;
+          color: white;
+          font-weight: 600;
+          font-size: 14px;
+          &.danger {
+            background-color: rgb(255, 82, 82);
+          }
+        }
         ion-badge {
           background-color: rgba(193, 209, 235, 0.288);
           border-radius: 4px;

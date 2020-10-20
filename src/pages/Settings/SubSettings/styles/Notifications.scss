@@ -1,0 +1,81 @@
+@import "../../../../theme/mixins";
+
+.Notifications {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+
+  ion-list-header {
+    h1 {
+      @include flex(space-between);
+      font-weight: bold;
+      font-size: 22px;
+    }
+  }
+  ion-list {
+    border-radius: 10px;
+  }
+  .no-result {
+    text-align: center;
+    margin: 48px;
+    h3 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+  .NotificationItem {
+    padding: 8px;
+    .icon {
+      @include flex(center);
+      background-color: rgba(179, 179, 179, 0.24);
+      color: var(--ion-text-color, black);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      ion-icon {
+        font-size: 24px;
+        opacity: 0.4;
+      }
+    }
+    .description {
+      text-align: left;
+      h3 {
+        font-weight: 500;
+      }
+      p {
+        font-weight: 500;
+        font-size: 11px;
+      }
+    }
+    .badge {
+      text-align: right;
+      margin: 0;
+      .read,
+      .unread {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(128, 128, 128, 0.123);
+        margin-left: auto;
+        margin-bottom: 12px;
+      }
+      .unread {
+        background-color: rgb(100, 149, 255);
+      }
+      p {
+        font-size: 10px;
+      }
+    }
+  }
+}

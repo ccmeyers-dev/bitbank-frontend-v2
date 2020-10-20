@@ -18,6 +18,7 @@ import { useCoinValue } from "../../Hooks/CoinValueHook";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { ExchangeWidget } from "../Widgets/ExchangeWidget";
 import { useProfile } from "../../Hooks/ProfileHook";
+import { tradingViewId } from "../../App";
 
 const Exchange: React.FC = () => {
   const [wallet, setWallet] = useState<any>({});
@@ -59,11 +60,18 @@ const Exchange: React.FC = () => {
 
     // console.log(`starting exchange at BITBAY:BTC${market}|12m...`);
 
+    const tradingViewReady = localStorage.getItem(tradingViewId) === "true";
     const scriptConfig = document.createElement("script");
 
     scriptConfig.innerHTML = ExchangeWidget(market, themeMode);
 
-    document.getElementById("chart")?.appendChild(scriptConfig);
+    const loadWidget = () => {
+      document.getElementById("chart")?.appendChild(scriptConfig);
+    };
+
+    if (tradingViewReady) {
+      loadWidget();
+    }
 
     return () => {
       // console.log("removing exchange...");

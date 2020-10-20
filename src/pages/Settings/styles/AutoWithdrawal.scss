@@ -1,0 +1,129 @@
+@import "../../../theme/mixins";
+
+.AutoWithdrawal {
+  .back-button {
+    margin-top: 12px;
+    margin-left: 16px;
+    padding: 4px;
+    font-size: 28px;
+    background-color: rgba(136, 136, 136, 0.171);
+    border-radius: 50%;
+  }
+  .body {
+    height: 100%;
+    margin-top: 12px;
+    padding: 0 12px;
+
+    .card {
+      margin: 24px auto;
+    }
+
+    .message {
+      margin: 24px auto;
+      border-radius: 12px;
+      text-align: center;
+      padding: 24px;
+      ion-icon {
+        font-size: 64px;
+      }
+      h1 {
+        font-size: 18px;
+        font-weight: 600;
+        opacity: 0.8;
+        margin-bottom: 24px;
+      }
+      p {
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0.6;
+      }
+      &.pending {
+        ion-icon {
+          color: rgb(255, 82, 82);
+        }
+      }
+      &.complete {
+        ion-icon {
+          color: rgb(93, 196, 153);
+        }
+      }
+    }
+
+    .action {
+      --background: rgba(29, 172, 255, 0.753);
+      --background-activated: rgba(29, 172, 255, 0.753);
+      --background-hover: rgba(29, 172, 255, 0.753);
+    }
+  }
+}
+
+.auto-withdrawal-modal {
+  ion-toolbar {
+    ion-title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .back-button {
+      font-size: 24px;
+      margin-right: 12px;
+      color: rgba(138, 138, 138, 0.5);
+    }
+  }
+  ion-content {
+    .card {
+      margin: 24px auto;
+    }
+    .input {
+      padding: 0 12px;
+      margin: auto;
+      max-width: 375px;
+      .input-box {
+        padding-bottom: 4px;
+        ion-input {
+          --background: rgba(185, 185, 185, 0.171);
+          border-radius: 12px;
+          margin: 8px auto;
+          --padding-top: 14px;
+          --padding-bottom: 14px;
+          --padding-start: 20px;
+          --placeholder-font-weight: 500;
+        }
+        p {
+          text-align: center;
+          margin: 0;
+          font-weight: 600;
+          font-size: 14px;
+          color: rgb(245, 109, 109);
+        }
+      }
+      .button {
+        @include flex(center);
+        margin-bottom: 12px;
+        ion-button {
+          width: 100%;
+          --border-radius: 12px;
+          --background: rgba(29, 172, 255, 0.753);
+          --background-activated: rgba(29, 172, 255, 0.753);
+          --background-hover: rgba(29, 172, 255, 0.753);
+          ion-spinner {
+            margin-left: 12px;
+          }
+        }
+        &.valid {
+          ion-button {
+            --background: rgb(87, 190, 130);
+            --background-activated: rgb(50, 150, 108);
+            --background-hover: rgb(50, 150, 108);
+          }
+        }
+        &.invalid {
+          ion-button {
+            --background: rgb(255, 96, 96);
+            --background-activated: rgb(255, 96, 96);
+            --background-hover: rgb(255, 96, 96);
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,14 +8,15 @@ const useSecureRequest = (url: string, cacheTime: number = 60 * 1000): any => {
     console.log("Must use request with a url");
   }
 
-  const { data, mutate } = useSwr(url, fetcher, {
+  const { data, mutate, error } = useSwr(url, fetcher, {
     revalidateOnFocus: false,
     dedupingInterval: cacheTime,
+    errorRetryCount: 1,
   });
 
   const update = () => mutate();
 
-  return { data, update };
+  return { data, update, error };
 };
 
 export default useSecureRequest;

@@ -11,6 +11,7 @@ import {
   ScreenerWidget,
   ScreenerWidgetScript,
 } from "../Widgets/ScreenerWidget";
+import { tradingViewId } from "../../App";
 
 const Charts: React.FC = () => {
   const [symbol, setSymbol] = useState("BITSTAMP:BTCUSD");
@@ -19,12 +20,11 @@ const Charts: React.FC = () => {
 
   useEffect(() => {
     // console.log("starting...");
+    const tradingViewReady = localStorage.getItem(tradingViewId) === "true";
 
     const scriptConfig = document.createElement("script");
 
     scriptConfig.innerHTML = TradingViewChart(symbol, themeMode);
-
-    document.getElementById("market-window")?.appendChild(scriptConfig);
 
     const screenerScriptConfig = document.createElement("script");
     screenerScriptConfig.type = "text/javascript";
@@ -32,9 +32,16 @@ const Charts: React.FC = () => {
     screenerScriptConfig.innerHTML = ScreenerWidget(themeMode);
     screenerScriptConfig.async = true;
 
-    document
-      .getElementById("screener-window")
-      ?.appendChild(screenerScriptConfig);
+    const loadWidget = () => {
+      document.getElementById("market-window")?.appendChild(scriptConfig);
+      document
+        .getElementById("screener-window")
+        ?.appendChild(screenerScriptConfig);
+    };
+
+    if (tradingViewReady) {
+      loadWidget();
+    }
   }, [symbol, themeMode]);
 
   return (

@@ -86,6 +86,14 @@ const UserProfile = () => {
                   <h3>{profile?.trader_id}</h3>
                 </IonLabel>
               </IonItem>
+              <IonItem className="ion-no-padding">
+                <IonLabel>
+                  <h2>Country</h2>
+                </IonLabel>
+                <IonLabel className="id ion-text-end">
+                  <h3>{profile?.profile?.country}</h3>
+                </IonLabel>
+              </IonItem>
               {profile?.trade_score && (
                 <IonItem className="ion-no-padding">
                   <IonLabel>

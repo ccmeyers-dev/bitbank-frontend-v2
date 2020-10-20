@@ -14,10 +14,11 @@ import Refresher from "../../components/utils/Refresher";
 import { WalletItem } from "../../components/WalletItem";
 
 //context
-import { useWallets } from "../../Hooks/WalletsHook";
+import { DummyWallets } from "../../MockData/wallets";
 
 const Wallets: React.FC = () => {
-  const { data: wallets } = useWallets();
+  // const { data: wallets } = useWallets();
+  const wallets = DummyWallets;
 
   return (
     <IonPage>

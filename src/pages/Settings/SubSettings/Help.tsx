@@ -22,11 +22,7 @@ const Help: React.FC = () => {
           icon={arrowBack}
           onClick={() => goBack("/en/settings")}
         />
-        <IonListHeader lines="none">
-          <h1>Help</h1>
-        </IonListHeader>
         <div className="content">
-          <h5>How to deposit funds to your account?</h5>
           <p className="note">
             Funding your account is quick and simple. There are various payment
             methods compatible with your {config.short_name} Wallet. Simply
@@ -39,7 +35,7 @@ const Help: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <p>Buy Crypto</p>
+              <p>Buy Now</p>
             </IonButton>
           </div>
           <ol>

@@ -33,7 +33,15 @@ const More: React.FC = () => {
       <IonRouterLink routerLink="/home" routerDirection="root">
         <div className="head">
           <h1>{config.name}</h1>
-          <IonIcon icon={chevronBack} />
+          <IonButton
+            routerLink="/auth/register"
+            mode="ios"
+            size="small"
+            fill="outline"
+            className="register"
+          >
+            <p>Register</p>
+          </IonButton>
         </div>
       </IonRouterLink>
 

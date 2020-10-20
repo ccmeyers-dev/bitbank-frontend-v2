@@ -1,6 +1,6 @@
 export const config = {
-  name: "Steem Trade",
-  short_name: "Steem",
-  site_name: "steemtrade",
-  location: "Luxemborg, CA",
+  name: "Bitbank Port 1",
+  short_name: "Bitbank Port 1",
+  site_name: "bitbank-port-1",
+  location: "Sandbox, GIT",
 };

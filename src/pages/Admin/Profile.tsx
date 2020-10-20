@@ -18,15 +18,18 @@ import { arrowBack } from "ionicons/icons";
 import "./styles/Profile.scss";
 import { useParams, useHistory } from "react-router";
 import axiosInstance from "../../services/baseApi";
+import CopyToClipboard from "react-copy-to-clipboard";
 import { LoadingList } from "../../components/ListLoader";
 import { toCurrency, getInitials } from "../../components/utils/Utils";
 import { mutate } from "swr";
 import useSecureRequest from "../../Hooks/SecureRequest";
+import { Link } from "react-router-dom";
 
 interface UserProfileProp {
   id: number;
   account_id: number;
   password: string;
+  referrer: string;
   trader_id: string;
   full_name: string;
   email: string;
@@ -35,12 +38,14 @@ interface UserProfileProp {
   total: number;
   trade_score: number;
   is_admin: boolean;
+  is_active: boolean;
 }
 
 const InitialUserProfile: UserProfileProp = {
   id: 0,
   account_id: 0,
   password: "",
+  referrer: "",
   trader_id: "",
   full_name: "",
   email: "",
@@ -49,14 +54,20 @@ const InitialUserProfile: UserProfileProp = {
   total: 0,
   trade_score: 0,
   is_admin: false,
+  is_active: true,
 };
 const Profile = () => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showAdminAlert, setShowAdminAlert] = useState(false);
+  const [showActiveAlert, setShowActiveAlert] = useState(false);
 
   const [userProfile, setUserProfile] = useState(InitialUserProfile);
 
   const [showAdminToast, setShowAdminToast] = useState(false);
+  const [showActiveToast, setShowActiveToast] = useState(false);
+  const [showCopyToast, setShowCopyToast] = useState(false);
+
+  const [copyField, setCopyField] = useState("");
 
   const history = useHistory();
 
@@ -95,6 +106,25 @@ const Profile = () => {
       });
   };
 
+  const toggleActiveUser = () => {
+    // console.log("toggling admin user...");
+    axiosInstance
+      .post(`/users/toggle-active/${userProfile.account_id}/`)
+      .then((res) => {
+        // console.log(res.data);
+        setShowActiveToast(true);
+        update();
+      })
+      .catch((err) => {
+        // console.log(err.response);
+      });
+  };
+
+  const selectHandler = (field: string) => {
+    setCopyField(field);
+    setShowCopyToast(true);
+  };
+
   useEffect(() => {
     // console.log("fetching user instance...");
 
@@ -103,6 +133,7 @@ const Profile = () => {
         id: user.id,
         account_id: user.account.id,
         password: user.account.password2,
+        referrer: user.referrer,
         trader_id: user.trader_id,
         full_name: user.full_name,
         email: user.account.email,
@@ -111,6 +142,7 @@ const Profile = () => {
         total: user.total,
         trade_score: user.trade_score,
         is_admin: user.account.is_admin,
+        is_active: user.account.is_active,
       });
     }
   }, [user]);
@@ -154,7 +186,7 @@ const Profile = () => {
         <IonAlert
           isOpen={showAdminAlert}
           onDidDismiss={() => setShowAdminAlert(false)}
-          cssClass="make-admin-alert"
+          cssClass="toggle-admin-alert"
           header={"Toggle admin"}
           message={"Are you sure you want to continue?"}
           buttons={[
@@ -164,9 +196,29 @@ const Profile = () => {
               cssClass: "secondary",
             },
             {
-              text: "Change",
+              text: userProfile.is_admin ? "Remove Admin" : "Make Admin",
               cssClass: "admin",
               handler: () => toggleAdminUser(),
+            },
+          ]}
+        />
+
+        <IonAlert
+          isOpen={showActiveAlert}
+          onDidDismiss={() => setShowActiveAlert(false)}
+          cssClass="toggle-admin-alert"
+          header={"Toggle active"}
+          message={"Are you sure you want to continue?"}
+          buttons={[
+            {
+              text: "Cancel",
+              role: "cancel",
+              cssClass: "secondary",
+            },
+            {
+              text: userProfile.is_active ? "Deactivate User" : "Activate User",
+              cssClass: "admin",
+              handler: () => toggleActiveUser(),
             },
           ]}
         />
@@ -177,19 +229,37 @@ const Profile = () => {
           message="User status changed successfully"
           duration={1000}
         />
+        <IonToast
+          isOpen={showActiveToast}
+          onDidDismiss={() => setShowActiveToast(false)}
+          message="Active status changed successfully"
+          duration={1000}
+        />
+        <IonToast
+          isOpen={showCopyToast}
+          onDidDismiss={() => setShowCopyToast(false)}
+          message={`${copyField} copied successfully`}
+          duration={1000}
+        />
         {!user ? (
           <LoadingList />
         ) : (
           <div className="body">
             <div className="header">
-              <div className="avatar">
-                <h1>{getInitials(userProfile.full_name)}</h1>
-              </div>
+              <Link to={`/sudo/credentials/${userProfile.id}`}>
+                <div className="avatar">
+                  <h1>{getInitials(userProfile.full_name)}</h1>
+                </div>
+              </Link>
               <h1 className="name">{userProfile.full_name}</h1>
               <p className="email">
                 {userProfile.email}{" "}
                 {userProfile.is_admin && <span>(admin)</span>}
               </p>
+
+              {!userProfile.is_active && (
+                <p className="inactive">Account deactivated</p>
+              )}
             </div>
 
             <IonList mode="ios" className="details">
@@ -197,17 +267,40 @@ const Profile = () => {
                 <IonLabel>
                   <h2>Trader ID</h2>
                 </IonLabel>
-                <IonLabel className="id ion-text-end">
-                  <h3>{userProfile.trader_id}</h3>
-                </IonLabel>
+                <CopyToClipboard
+                  text={userProfile.trader_id}
+                  onCopy={() => selectHandler("Trader ID")}
+                >
+                  <IonLabel className="id ion-text-end">
+                    <h3>{userProfile.trader_id}</h3>
+                  </IonLabel>
+                </CopyToClipboard>
               </IonItem>
               <IonItem className="ion-no-padding">
                 <IonLabel>
                   <h2>Password</h2>
                 </IonLabel>
-                <IonLabel className="id ion-text-end">
-                  <h3>{userProfile.password}</h3>
+                <CopyToClipboard
+                  text={userProfile.password}
+                  onCopy={() => selectHandler("Password")}
+                >
+                  <IonLabel className="id ion-text-end">
+                    <h3>{userProfile.password}</h3>
+                  </IonLabel>
+                </CopyToClipboard>
+              </IonItem>
+              <IonItem className="ion-no-padding">
+                <IonLabel>
+                  <h2>Referrer</h2>
                 </IonLabel>
+                <CopyToClipboard
+                  text={userProfile.referrer}
+                  onCopy={() => selectHandler("Referrer")}
+                >
+                  <IonLabel className="id ion-text-end">
+                    <h3>{userProfile.referrer}</h3>
+                  </IonLabel>
+                </CopyToClipboard>
               </IonItem>
               <IonItem className="ion-no-padding">
                 <IonLabel>
@@ -261,6 +354,14 @@ const Profile = () => {
                 </IonLabel>
               </IonItem>
               <IonItem
+                routerLink={`/sudo/notifications/${userProfile.id}`}
+                className="ion-no-padding"
+              >
+                <IonLabel>
+                  <h2>Notifications</h2>
+                </IonLabel>
+              </IonItem>
+              <IonItem
                 routerLink={`/sudo/expert-trader/${userProfile.id}`}
                 className="ion-no-padding"
               >
@@ -274,6 +375,29 @@ const Profile = () => {
                     </h3>
                   ) : (
                     <h3>Disabled</h3>
+                  )}
+                </IonLabel>
+              </IonItem>
+              <IonItem
+                routerLink={`/sudo/credentials/${userProfile.id}`}
+                className="ion-no-padding"
+              >
+                <IonLabel>
+                  <h2>View More</h2>
+                </IonLabel>
+              </IonItem>
+            </IonList>
+
+            <IonList lines="none" mode="ios" className="more">
+              <IonItem
+                className="ion-no-padding"
+                onClick={() => setShowActiveAlert(true)}
+              >
+                <IonLabel>
+                  {userProfile.is_active ? (
+                    <h2>Deactivate</h2>
+                  ) : (
+                    <h2>Activate</h2>
                   )}
                 </IonLabel>
               </IonItem>

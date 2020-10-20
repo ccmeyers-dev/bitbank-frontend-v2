@@ -22,6 +22,9 @@
       @include flex(center);
       flex-direction: column;
       padding: 24px;
+      a {
+        text-decoration: none;
+      }
       .avatar {
         background-color: rgba(64, 68, 87, 0.575);
         border-radius: 50%;
@@ -35,18 +38,24 @@
           font-weight: 500;
         }
       }
-      h1 {
+      .name {
         margin: 16px auto 0;
         font-weight: 500;
         font-size: 22px;
       }
-      p {
+      .email {
         margin: 0;
         font-size: 14px;
         opacity: 0.6;
         span {
           font-size: 12px;
         }
+      }
+      .inactive {
+        font-size: 13px;
+        margin: 4px 0 0;
+        padding: 0;
+        color: rgb(255, 92, 92);
       }
     }
     .details {
@@ -107,11 +116,11 @@
 
 .delete-user-alert {
   .delete {
-    color: rgb(241, 85, 85);
+    color: rgb(255, 103, 103);
   }
 }
 
-.make-admin-alert {
+.toggle-admin-alert {
   .admin {
     color: rgb(34, 170, 211);
   }

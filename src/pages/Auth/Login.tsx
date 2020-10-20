@@ -6,6 +6,7 @@ import {
   IonInput,
   IonRouterLink,
   IonIcon,
+  IonSpinner,
 } from "@ionic/react";
 import "./styles/Login.scss";
 import axiosInstance from "../../services/baseApi";
@@ -59,7 +60,7 @@ const Login: React.FC = () => {
         <div className="form">
           <div className="header">
             <IonRouterLink routerDirection="root" routerLink="/home">
-              <IonIcon src="coins/steem.svg" />
+              <IonIcon src="coins/logo.svg" />
             </IonRouterLink>
             <h1>Login</h1>
           </div>
@@ -70,7 +71,6 @@ const Login: React.FC = () => {
               placeholder="Email address"
               name="email"
               onIonChange={(e) => setEmail(e.detail.value!)}
-              clearInput
             />
             <IonInput
               type="password"
@@ -95,7 +95,8 @@ const Login: React.FC = () => {
           <div className="button">
             {processing ? (
               <IonButton mode="ios" expand="block">
-                <p>Processing...</p>
+                <p>Submitting</p>
+                <IonSpinner name="crescent" />
               </IonButton>
             ) : (
               <IonButton mode="ios" expand="block" onClick={loginHandler}>

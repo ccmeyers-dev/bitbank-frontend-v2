@@ -2,10 +2,7 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-
-import decode from "jwt-decode";
-
-import loadable from "@loadable/component";
+import { useScript } from "./Hooks/ScriptHook";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -25,85 +22,65 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.scss";
+import Tabs from "./pages/Tabs";
+import SubPages from "./pages/SubPages";
+import AdminPages from "./pages/AdminPages";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Auth/Profile";
+import HomePage from "./pages/Landing/HomePage";
 
-// Route components
-// import Tabs from "./pages/Tabs";
-// import SubPages from "./pages/SubPages";
-// import Auth from "./pages/Auth";
-// import HomePage from "./pages/Landing/HomePage";
-// import AdminPages from "./pages/AdminPages";
-
-const AsyncHome = loadable(() => import("./pages/Landing/HomePage"));
-const AsyncAdmin = loadable(() => import("./pages/AdminPages"));
-const AsyncSubPages = loadable(() => import("./pages/SubPages"));
-const AsyncAuth = loadable(() => import("./pages/Auth"));
-const AsyncTabs = loadable(() => import("./pages/Tabs"));
-
-export const isAuthenticated = () => {
+export const hasKey = () => {
   const accessToken = localStorage.getItem("access_token");
-  const refreshToken = localStorage.getItem("refresh_token");
 
-  if (!accessToken || !refreshToken) {
+  if (!accessToken) {
     console.log("JWT tokens not found");
-    return false;
-  }
-
-  try {
-    const { exp } = decode(refreshToken);
-
-    if (exp < new Date().getTime() / 1000) {
-      console.log("JWT token expired", exp, new Date().getTime() / 1000);
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      window.location.href = "/auth/login/";
-      return false;
-    }
-  } catch (e) {
-    console.log("JWT token decode error");
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    window.location.href = "/auth/login/";
     return false;
   }
 
   return true;
 };
 
-const ControlledRoute = ({
-  component: Component,
-  loggedInOnly = true,
-  ...rest
-}: any) => (
+const AuthRoute = ({ component: Component, ...rest }: any) => (
   <Route
     {...rest}
     render={(props) =>
-      isAuthenticated() === loggedInOnly ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={loggedInOnly ? "/home" : "/en/home"} exact />
-      )
+      /// check if only logged in user should authenticate
+      hasKey() ? <Component {...props} /> : <Redirect to="/auth/login" exact />
     }
   />
 );
 
+const AnonymousOnlyRoute = ({ component: Component, ...rest }: any) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      /// make sure user is anonymous
+      !hasKey() ? <Component {...props} /> : <Redirect to="/en/home" exact />
+    }
+  />
+);
+
+export const tradingViewId = "tradingView";
+export const tradingViewSrc = "https://s3.tradingview.com/tv.js";
+
 const App: React.FC = () => {
+  useScript(tradingViewSrc, tradingViewId);
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <ControlledRoute path="/en" component={AsyncTabs} />
+          <AuthRoute path="/en" component={Tabs} />
 
-          <ControlledRoute path="/tx" component={AsyncSubPages} />
+          <AuthRoute path="/tx" component={SubPages} />
 
-          <ControlledRoute path="/sudo" component={AsyncAdmin} />
+          <AuthRoute path="/sudo" component={AdminPages} />
 
-          <ControlledRoute
-            path="/auth"
-            component={AsyncAuth}
-            loggedInOnly={false}
-          />
+          <AuthRoute path="/verify/profile" component={Profile} />
 
-          <Route path="/home" component={AsyncHome} />
+          <AnonymousOnlyRoute path="/auth" component={Auth} />
+
+          <Route path="/home" component={HomePage} />
 
           <Route render={() => <Redirect to="/home" />} exact />
         </IonRouterOutlet>

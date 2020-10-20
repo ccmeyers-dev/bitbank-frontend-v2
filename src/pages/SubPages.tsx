@@ -16,6 +16,9 @@ import PrivacyPolicy from "./Settings/SubSettings/PrivacyPolicy";
 import Terms from "./Settings/SubSettings/Terms";
 import MarketOverview from "./TradeViews/MarketOverview";
 import UserProfile from "./Settings/UserProfile";
+import Notifications from "./Settings/SubSettings/Notifications";
+import NotificationInstance from "./Settings/SubSettings/NotificationInstance";
+import AutoWithdrawal from "./Settings/AutoWithdrawal";
 
 const SubPages: React.FC = () => (
   <IonPage>
@@ -23,7 +26,10 @@ const SubPages: React.FC = () => (
       {/* settings routes */}
       <Route path="/tx/theme" component={ThemeSelector} />
       <Route path="/tx/profile" component={UserProfile} />
+      <Route path="/tx/auto-withdrawal" component={AutoWithdrawal} />
       {/* sub settings routes */}
+      <Route path="/tx/notifications" component={Notifications} exact />
+      <Route path="/tx/notifications/:id" component={NotificationInstance} />
       <Route path="/tx/address-book" component={AddressBook} />
       <Route path="/tx/account-level" component={AccountLevel} />
       <Route path="/tx/about" component={About} />

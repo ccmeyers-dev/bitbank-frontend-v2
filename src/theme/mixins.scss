@@ -9,3 +9,15 @@
   justify-content: $justify;
   align-items: $align;
 }
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  ion-spinner {
+    font-size: 64px;
+    transform: scale(2);
+  }
+}

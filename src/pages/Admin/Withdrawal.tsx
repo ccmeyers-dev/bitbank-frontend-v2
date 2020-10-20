@@ -51,7 +51,7 @@ interface AddBillingsItem {
 }
 
 const InitialBilling: AddBillingsItem = {
-  amount: null,
+  amount: 0,
   title: "",
   withdrawal: null,
 };
@@ -162,7 +162,7 @@ const Withdrawal = () => {
 
   const addBilling = () => {
     // console.log("adding billing...");
-    if (!billing.amount || !billing.title) {
+    if (!billing.title) {
       // console.log("incomplete post data");
     } else {
       axiosInstance

@@ -5,7 +5,6 @@ import {
   IonIcon,
   IonListHeader,
   IonToast,
-  IonLoading,
   NavContext,
 } from "@ionic/react";
 import { arrowBack, copy } from "ionicons/icons";
@@ -16,6 +15,7 @@ import QRCode from "qrcode.react";
 //axios
 import { config } from "../../../app.config";
 import { useWallets } from "../../../Hooks/WalletsHook";
+import FullSpinner from "../../../components/FullSpinner";
 
 const AddressBook: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -38,12 +38,7 @@ const AddressBook: React.FC = () => {
           onClick={() => goBack("/en/settings")}
         />
         {!wallets ? (
-          <IonLoading
-            cssClass="my-custom-loading"
-            isOpen={true}
-            message={"Fetching wallets..."}
-            duration={5000}
-          />
+          <FullSpinner />
         ) : (
           <>
             <IonToast

@@ -89,19 +89,6 @@ const TraderBlock: React.FC<ListProp> = ({ trader, back }) => {
 const CopyTradeInfo: React.FC = () => {
   return (
     <div className="copy-trade-info">
-      <p className="title">
-        <span>CopyTrader&trade;</span>, {config.short_name}'s most important
-        feature allows you to view what real traders are doing in real time and
-        copy their trading automatically
-      </p>
-      <h5>How to Copy Trade?</h5>
-      <div className="list">
-        <ol>
-          <li>Copy and paste Trader ID to pull trader profile</li>
-          <li>Click "Copy" to automatically copy the trader positions</li>
-          <li>Choose a total amount for the copy and start Trading</li>
-        </ol>
-      </div>
       <div className="info">
         <h1>When they trade, you trade</h1>
         <p>

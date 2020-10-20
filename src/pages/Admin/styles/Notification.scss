@@ -1,0 +1,184 @@
+@import "../../../theme/mixins";
+
+.AdminNotification {
+  .back {
+    width: 30vw;
+    .back-button {
+      font-size: 24px;
+      margin-left: 8px;
+      margin-top: 4px;
+      color: var(--ion-text-color, black);
+    }
+  }
+  ion-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .no-result {
+    text-align: center;
+    margin: 48px;
+    h3 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .button {
+    @include flex(center);
+    margin-bottom: 12px;
+    ion-button {
+      width: 100%;
+      --border-radius: 12px;
+    }
+  }
+  ion-list {
+    border-radius: 10px;
+  }
+  .NotificationItem {
+    padding: 8px;
+    .icon {
+      @include flex(center);
+      background-color: rgba(179, 179, 179, 0.493);
+      color: var(--ion-text-color, black);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      ion-icon {
+        font-size: 22px;
+        opacity: 0.8;
+      }
+    }
+    .description {
+      text-align: left;
+      h3 {
+        font-weight: 500;
+      }
+      p {
+        font-weight: 500;
+        font-size: 11px;
+      }
+    }
+    .actions {
+      ion-button {
+        --border-radius: 16px;
+        --padding-start: 24px;
+        --padding-end: 24px;
+        --border-color: rgb(39, 218, 250);
+      }
+    }
+    .amount {
+      text-align: right;
+      margin: 0;
+      h5,
+      p {
+        font-size: 12px;
+        font-weight: 500;
+      }
+      p {
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+.notification-modal {
+  ion-toolbar {
+    ion-title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .back-button {
+      font-size: 24px;
+      margin-right: 12px;
+      color: rgba(138, 138, 138, 0.5);
+    }
+  }
+  ion-content {
+    .details {
+      margin: auto;
+      max-width: 375px;
+      padding: 24px 4px;
+      .title {
+        text-align: center;
+        margin-bottom: 16px;
+        p {
+          margin: 0 0 2px 0;
+          font-weight: bold;
+          color: rgb(110, 110, 110);
+        }
+      }
+      .message {
+        background-color: rgba(151, 151, 151, 0.089);
+        border-radius: 12px;
+        padding: 12px;
+        margin: 0 8px;
+        .body {
+          text-align: left;
+          font-weight: bold;
+          color: var(--ion-text-color);
+          opacity: 0.6;
+          font-size: 14px;
+          white-space: pre-wrap;
+        }
+      }
+    }
+    .input {
+      padding: 0 12px;
+      margin: auto;
+      max-width: 375px;
+      .input-box {
+        padding: 12px 0px;
+        padding-top: 0;
+        ion-input {
+          --background: rgba(185, 185, 185, 0.171);
+          border-radius: 16px;
+          margin: 12px auto;
+          --padding-top: 16px;
+          --padding-bottom: 16px;
+          --padding-start: 20px;
+          --placeholder-font-weight: 500;
+        }
+        ion-textarea {
+          --background: rgba(185, 185, 185, 0.171);
+          border-radius: 16px;
+          --padding-top: 16px;
+          --padding-bottom: 16px;
+          --padding-start: 20px;
+          --placeholder-font-weight: 500;
+        }
+      }
+      .button {
+        @include flex(center);
+        margin-bottom: 12px;
+        ion-button {
+          width: 100%;
+          --border-radius: 24px;
+        }
+      }
+
+      .read {
+        text-align: center;
+        margin-top: 32px;
+        p {
+          color: rgb(55, 192, 117);
+        }
+      }
+      .unread {
+        text-align: center;
+        margin-top: 32px;
+        p {
+          color: rgb(36, 131, 219);
+        }
+      }
+      .delete {
+        text-align: center;
+        margin-top: 32px;
+        p {
+          color: rgb(255, 67, 67);
+        }
+      }
+    }
+  }
+}

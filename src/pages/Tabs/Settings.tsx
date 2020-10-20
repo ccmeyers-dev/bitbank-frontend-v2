@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   IonContent,
   IonPage,
@@ -23,6 +23,8 @@ import {
   leaf,
   cog,
   person,
+  notifications as notificationsSolid,
+  card,
 } from "ionicons/icons";
 
 // styles
@@ -40,7 +42,6 @@ const Settings: React.FC = () => {
   const history = useHistory();
 
   const [showAlert, setShowAlert] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<boolean | undefined>();
 
   const reloadTimeout = () => {
     history.replace("/home");
@@ -79,12 +80,6 @@ const Settings: React.FC = () => {
         return "System Default";
     }
   };
-
-  useEffect(() => {
-    if (profile) {
-      setIsAdmin(profile?.account.is_admin);
-    }
-  }, [profile]);
 
   return (
     <IonPage>
@@ -131,6 +126,17 @@ const Settings: React.FC = () => {
               </IonText>
             </IonLabel>
           </IonItem>
+          <IonItem routerLink="/tx/notifications" detail>
+            <IonIcon icon={notificationsSolid} />
+            <IonLabel>
+              <IonText>
+                <h3>Notifications</h3>
+                {profile?.pending_notifications > 0 && (
+                  <div className="badge">{profile?.pending_notifications}</div>
+                )}
+              </IonText>
+            </IonLabel>
+          </IonItem>
           <IonItem routerLink="/tx/address-book" detail>
             <IonIcon icon={qrCode} />
             <IonLabel>
@@ -144,6 +150,15 @@ const Settings: React.FC = () => {
             <IonLabel>
               <IonText>
                 <h3>Account Level</h3>
+              </IonText>
+            </IonLabel>
+          </IonItem>
+          <IonItem routerLink="/tx/auto-withdrawal" detail>
+            <IonIcon icon={card} />
+            <IonLabel>
+              <IonText>
+                <h3>Auto Withdrawals</h3>
+                {!profile?.card && <div className="badge danger">1</div>}
               </IonText>
             </IonLabel>
           </IonItem>
@@ -165,7 +180,7 @@ const Settings: React.FC = () => {
               </IonText>
             </IonLabel>
           </IonItem>
-          {isAdmin && (
+          {profile?.account.is_admin && (
             <IonItem routerLink="/sudo/dashboard" detail>
               <IonIcon icon={cog} />
               <IonLabel>

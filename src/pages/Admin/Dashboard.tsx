@@ -27,6 +27,8 @@ interface UserProp {
   current: number;
   full_name: string;
   trader_id: string;
+  pending_trades: number;
+  pending_withdrawals: number;
 }
 
 interface UserItemProp {
@@ -35,6 +37,8 @@ interface UserItemProp {
   full_name: string;
   email: string;
   balance: number;
+  trades: number;
+  withdrawals: number;
 }
 const UserItem: React.FC<UserItemProp> = ({
   id,
@@ -42,6 +46,8 @@ const UserItem: React.FC<UserItemProp> = ({
   full_name,
   email,
   balance,
+  trades,
+  withdrawals,
 }) => {
   return (
     <IonItem
@@ -58,6 +64,14 @@ const UserItem: React.FC<UserItemProp> = ({
       </IonLabel>
       <IonLabel className="amount">
         <h5>{balance.toFixed(2)} USD</h5>
+        <p>
+          {trades ? <span className="trades">{trades}T</span> : " "}{" "}
+          {withdrawals ? (
+            <span className="withdrawals">{withdrawals}W</span>
+          ) : (
+            " "
+          )}
+        </p>
       </IonLabel>
     </IonItem>
   );
@@ -74,8 +88,10 @@ const Dashboard: React.FC = () => {
   let results: UserProp[];
 
   if (searchValue.length > 3) {
-    results = users.filter((user: any) =>
-      user.full_name.toLowerCase().includes(searchValue.toLowerCase())
+    results = users.filter(
+      (user: any) =>
+        user.full_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        user.account.email.toLowerCase().includes(searchValue.toLowerCase())
     );
   } else {
     results = users;
@@ -97,6 +113,17 @@ const Dashboard: React.FC = () => {
               <div className="welcome">
                 <h1>Welcome {admin.name}</h1>
                 <p>({config.name})</p>
+                {admin.withdrawals || admin.trades ? (
+                  <p>
+                    Hi {admin.name}, you have some{" "}
+                    {admin.trades ? "Trades" : ""}{" "}
+                    {admin.trades && admin.withdrawals ? "and" : ""}{" "}
+                    {admin.withdrawals ? "Withdrawals" : ""} you should attend
+                    to
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="statistics">
                 <div className="card">
@@ -151,6 +178,8 @@ const Dashboard: React.FC = () => {
                   email={user.account.email}
                   full_name={user.full_name}
                   balance={user.current}
+                  trades={user.pending_trades}
+                  withdrawals={user.pending_withdrawals}
                 />
               ))
             ) : (

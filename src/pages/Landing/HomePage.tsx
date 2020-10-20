@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { IonContent, IonPage } from "@ionic/react";
 import "./styles/HomePage.scss";
 import Refresher from "../../components/utils/Refresher";
@@ -7,10 +7,6 @@ import More from "./More";
 import Home from "./Home";
 
 const HomePage: React.FC = () => {
-  useEffect(() => {
-    console.log("Visited: ", localStorage.getItem("visited"));
-  }, []);
-
   return (
     <IonPage>
       <IonContent className="HomePage">
