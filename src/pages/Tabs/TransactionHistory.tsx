@@ -142,7 +142,7 @@ const TransactionHistory: React.FC = () => {
         <Refresher />
         {!allTransactions ? (
           <div className="loading-spinner">
-            <IonSpinner color="primary" name="crescent" />
+            <IonSpinner color="primary" />
           </div>
         ) : (
           <>

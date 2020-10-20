@@ -25,20 +25,20 @@ const SlideItem = ({ title, body }: { title: string; body: string }) => {
 const More: React.FC = () => {
   return (
     <div className="more">
-      <IonRouterLink routerLink="/home" routerDirection="root">
-        <div className="head">
+      <div className="head">
+        <IonRouterLink routerLink="/home" routerDirection="root">
           <h1>{config.name}</h1>
-          <IonButton
-            routerLink="/auth/register"
-            mode="ios"
-            size="small"
-            fill="outline"
-            className="register"
-          >
-            <p>Register</p>
-          </IonButton>
-        </div>
-      </IonRouterLink>
+        </IonRouterLink>
+        <IonButton
+          routerLink="/auth/register"
+          mode="ios"
+          size="small"
+          fill="outline"
+          className="register"
+        >
+          <p>Register</p>
+        </IonButton>
+      </div>
 
       <IonSlides options={{ slidesPerPage: 1 }} pager={true}>
         <SlideItem title={`${config.short_name} customers`} body="5 million+" />

@@ -27,6 +27,7 @@ import { ErrorList, LoadingList } from "../../components/ListLoader";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
+import FullSpinner from "../../components/FullSpinner";
 
 const Wallet: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -126,12 +127,7 @@ const Wallet: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       {loading ? (
-        <IonLoading
-          cssClass="my-custom-loading"
-          isOpen={true}
-          message={"Loading wallet..."}
-          duration={5000}
-        />
+        <FullSpinner />
       ) : error ? (
         <ErrorList />
       ) : (
