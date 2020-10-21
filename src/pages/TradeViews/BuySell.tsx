@@ -19,6 +19,7 @@ import axiosInstance from "../../services/baseApi";
 import { WalletProp } from "../../Interfaces/Wallet";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
+import { mutate } from "swr";
 
 const BuySell: React.FC = () => {
   const [mainValue, setMainValue] = useState<string>("0");
@@ -126,6 +127,7 @@ const BuySell: React.FC = () => {
         })
         .then((res) => {
           setMainValue("0");
+          mutate("/users/transactions/");
           history.push("/tx/wallet/" + wallet);
           successToast(res.data.amount, res.data.type);
         })
