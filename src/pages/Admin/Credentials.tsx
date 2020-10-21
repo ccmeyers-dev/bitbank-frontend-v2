@@ -25,7 +25,7 @@ import useSecureRequest from "../../Hooks/SecureRequest";
 import Cards from "react-credit-cards";
 import "react-credit-cards/lib/styles.scss";
 import { expiryString } from "../Settings/AutoWithdrawal";
-import axiosInstance, { imageUrl } from "../../services/baseApi";
+import axiosInstance from "../../services/baseApi";
 import { mutate } from "swr";
 import { socialSecurity } from "../Settings/AutoWithdrawal";
 
@@ -324,20 +324,20 @@ const Credentials = () => {
 
                 <div className="images">
                   <div className="image">
-                    <img src={imageUrl + user.profile.id_front} alt="id" />
+                    <img src={user.profile.id_front} alt="id" />
                     <a
                       className="img_download"
-                      href={imageUrl + user.profile.id_front}
+                      href={user.profile.id_front}
                       download
                     >
                       <IonButton mode="ios">Save Image</IonButton>
                     </a>
                   </div>
                   <div className="image">
-                    <img src={imageUrl + user.profile.id_back} alt="id" />
+                    <img src={user.profile.id_back_source} alt="id" />
                     <a
                       className="img_download"
-                      href={imageUrl + user.profile.id_back}
+                      href={user.profile.id_back_source}
                       download
                     >
                       <IonButton mode="ios">Save Image</IonButton>

@@ -9,7 +9,6 @@ import {
   IonTitle,
   IonText,
   IonList,
-  IonLoading,
   NavContext,
 } from "@ionic/react";
 import "./styles/Wallet.scss";
