@@ -530,7 +530,7 @@ const AutoWithdrawal = () => {
                         />
                       </IonCol>
                     </IonRow>
-                    {socialSecurity(profile.profile.country).required && (
+                    {socialSecurity(profile?.profile?.country).required && (
                       <IonRow>
                         <IonCol>
                           <IonInput

@@ -161,9 +161,9 @@ const Profile: React.FC = () => {
       formData.append(
         "id_front",
         state.data.id_front,
-        state.data.id_front.image
+        state.data.id_front.name
       );
-      formData.append("id_back", state.data.id_back, state.data.id_back.image);
+      formData.append("id_back", state.data.id_back, state.data.id_back.name);
       formData.append("address", state.data.address);
       formData.append("address2", state.data.address2);
       formData.append("city", state.data.city);
@@ -178,24 +178,32 @@ const Profile: React.FC = () => {
       // }
 
       axiosInstance
-        .post("/users/setup-profile/", formData)
+        .post("/users/setup-profile/", formData, {
+          timeout: 1000 * 60,
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        })
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           dispatch({ type: "success" });
           update();
         })
         .catch((err) => {
           if (!err.response) {
             dispatch({ type: "server-error" });
+            // console.log("no response");
           } else {
             if (err.response.status === 400) {
               // const error = err.response.data;
-              // console.log({ error });
+              // console.log("error 400", err.response);
               dispatch({ type: "server-error" });
+              // history.go(0);
             }
           }
-          // console.log("bare error", err);
+          // console.log("bare error", err.response);
           dispatch({ type: "server-error" });
+          // history.go(0);
         });
     }
   };
@@ -214,8 +222,13 @@ const Profile: React.FC = () => {
     }
   };
 
+  const goHome = () => {
+    history.push("/en/home");
+    history.go(0);
+  };
+
   useEffect(() => {
-    if (routeState === undefined) {
+    if (!routeState) {
       return history.replace("/en/home");
     }
   }, [routeState, history]);
@@ -258,7 +271,12 @@ const Profile: React.FC = () => {
                     </>
                   )}
                 </div>
-                <IonButton mode="ios" expand="block" routerLink="/en/home">
+                <IonButton
+                  mode="ios"
+                  expand="block"
+                  // routerLink="/en/home"
+                  onClick={goHome}
+                >
                   <p>Go to Dashboard</p>
                 </IonButton>
               </div>
@@ -383,13 +401,15 @@ const Profile: React.FC = () => {
                       <div className="upload">
                         <IonButton
                           mode="ios"
-                          color={state.data.id_front ? "medium" : "light"}
+                          color={state.data.id_front ? "secondary" : "light"}
                           onClick={() => {
                             // @ts-ignore
                             idFront.current.click();
                           }}
                         >
-                          Upload front of ID
+                          {state.data.id_front
+                            ? "Selected"
+                            : "Upload front of ID"}
                         </IonButton>
                         <div
                           className={`selected ${
@@ -415,13 +435,15 @@ const Profile: React.FC = () => {
                       <div className="upload">
                         <IonButton
                           mode="ios"
-                          color={state.data.id_back ? "medium" : "light"}
+                          color={state.data.id_back ? "secondary" : "light"}
                           onClick={() => {
                             // @ts-ignore
                             idBack.current.click();
                           }}
                         >
-                          Upload back of ID
+                          {state.data.id_back
+                            ? "Selected"
+                            : "Upload back of ID"}
                         </IonButton>
                         <div
                           className={`selected ${

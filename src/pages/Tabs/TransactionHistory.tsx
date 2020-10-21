@@ -12,7 +12,6 @@ import {
   IonItem,
   IonLabel,
   IonListHeader,
-  IonSpinner,
 } from "@ionic/react";
 
 // styles
@@ -36,6 +35,7 @@ import { LoadingList } from "../../components/ListLoader";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
+import FullSpinner from "../../components/FullSpinner";
 
 const WalletSelector: React.FC<WalletSelectorProp> = ({
   symbol,
@@ -142,7 +142,7 @@ const TransactionHistory: React.FC = () => {
         <Refresher />
         {!allTransactions ? (
           <div className="loading-spinner">
-            <IonSpinner color="primary" />
+            <FullSpinner />
           </div>
         ) : (
           <>
