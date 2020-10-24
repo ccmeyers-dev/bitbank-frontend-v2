@@ -23,7 +23,7 @@ import {
 } from "ionicons/icons";
 import Refresher from "../../components/utils/Refresher";
 import "./styles/Withdraw.scss";
-import { HistoryIconSelector } from "../../components/utils/Utils";
+import { HistoryIconSelector, fullDate } from "../../components/utils/Utils";
 import axiosInstance from "../../services/baseApi";
 import { useCoinValue } from "../../Hooks/CoinValueHook";
 import { LoadingList } from "../../components/ListLoader";
@@ -122,7 +122,7 @@ interface WithdrawalDetailProp {
   };
 }
 const WithdrawalDetail: React.FC<WithdrawalDetailProp> = ({
-  detail: { billings, wallet, amount, completed },
+  detail: { billings, wallet, amount, completed, date_created },
 }) => {
   return (
     <div className="detail">
@@ -156,6 +156,10 @@ const WithdrawalDetail: React.FC<WithdrawalDetailProp> = ({
         <div className="entry">
           <h5>Wallet</h5>
           <p>{wallet} wallet</p>
+        </div>
+        <div className="entry">
+          <h5>Date</h5>
+          <p>{fullDate(date_created)}</p>
         </div>
         <div className={`entry ${completed ? "completed" : "pending"}`}>
           <h5>Completed</h5>
@@ -327,6 +331,7 @@ const Withdraw: React.FC = () => {
             amount: withdrawAmount,
             completed: false,
             portfolio: profile?.id,
+            date_created: null,
           })
           .then((res) => {
             setResponseAmount(res.data.amount);
