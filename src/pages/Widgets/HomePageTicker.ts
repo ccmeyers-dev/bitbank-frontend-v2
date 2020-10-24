@@ -37,7 +37,7 @@ export const HomePageTicker = `
       "proName": "BITSTAMP:XRPEUR"
     }
   ],
-  "colorTheme": "dark",
+  "colorTheme": "light",
   "isTransparent": true,
   "displayMode": "adaptive",
   "locale": "en"

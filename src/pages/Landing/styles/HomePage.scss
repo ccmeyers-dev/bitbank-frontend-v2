@@ -2,12 +2,27 @@
 
 .HomePage {
   height: 100%;
+  --inverse-color: white;
+  // --accent-color: #5e3bfd;
+  --accent-color: #2e2b4d;
+  --main-color: black;
+  --light-color: rgb(240, 240, 240);
   .home {
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-      url(/images/dark.jpg);
-    background-color: black;
+    // background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    //   url(/images/dark.jpg);
+    background: linear-gradient(
+      170deg,
+      rgba(255, 161, 161, 0.692) 60%,
+      rgb(191, 226, 220) 60%
+    );
+    background: linear-gradient(
+      170deg,
+      rgba(255, 255, 255, 0.692) 60%,
+      var(--accent-color) 60%
+    );
+    background-color: var(--inverse-color);
     background-size: cover;
     background-origin: content-box;
     background-repeat: no-repeat;
@@ -18,49 +33,61 @@
       padding: 16px;
       h1 {
         margin: 0;
-        color: white;
+        color: var(--main-color);
         font-size: 20px;
         font-weight: 600;
         font-family: "Rubik", sans-serif;
       }
       .register {
-        --color: #41ddaed2;
-        --border-color: 46be9a;
-        --background: transparent;
-        --background-activated: transparent;
-        --background-hover: transparent;
+        height: 36px;
+        width: 120px;
+        --color: var(--inverse-color);
+        --background: var(--accent-color);
+        --background-activated: var(--accent-color);
+        --background-hover: var(--accent-color);
+        --border-radius: 24px;
         p {
           font-weight: 700;
         }
       }
     }
     h3 {
-      color: white;
+      color: var(--main-color);
       // color: black;
       margin: 64px 10vw;
       text-align: center;
       font-size: 28px;
       font-weight: 600;
     }
-    .start {
+    .intro {
       @include flex(center);
+      flex-direction: column;
       ion-button {
         --border-radius: 24px;
         height: 40px;
-        margin: 0 12px;
         p {
           font-weight: 700;
           font-size: 14px;
         }
         &.start {
-          --background: #66bd94;
-          --background-activated: #66bd94;
-          --background-hover: #66bd94;
+          width: 60%;
+          color: white;
+          margin-bottom: 12px;
+          --background: var(--accent-color);
+          --background-activated: var(--accent-color);
+          --background-hover: var(--accent-color);
         }
         &.learn {
-          --background: #ff8585;
-          --background-activated: #ff8585;
-          --background-hover: #ff8585;
+          width: 45%;
+          color: black;
+          --background: var(--light-color);
+          --background-activated: var(--light-color);
+          --background-hover: var(--light-color);
+        }
+
+        transition: all 0.6s ease-in-out;
+        &:hover {
+          transform: scale(1.1);
         }
       }
     }
@@ -71,17 +98,21 @@
       .entry {
         display: flex;
         align-items: center;
+        transition: all 0.5s ease-in-out;
         ion-icon {
           font-size: 24px;
-          color: #ff8585;
+          color: var(--light-color);
           margin-right: 12px;
           min-width: 24px;
         }
         p {
           font-size: 14px;
-          font-weight: 500;
-          color: white;
+          font-weight: 800;
+          color: var(--light-color);
           // color: rgb(26, 25, 25);
+        }
+        &:hover {
+          transform: scale(1.05);
         }
       }
     }
@@ -101,6 +132,13 @@
         font-family: "Rubik", sans-serif;
       }
       .register {
+        height: 36px;
+        width: 120px;
+        --color: var(--inverse-color);
+        --background: var(--accent-color);
+        --background-activated: var(--accent-color);
+        --background-hover: var(--accent-color);
+        --border-radius: 24px;
         p {
           font-weight: 700;
         }
@@ -240,18 +278,30 @@
 //     }
 //   }
 // }
-@media (min-width: 768px) {
+@media (min-width: 960px) {
   .HomePage {
     .home {
+      background: linear-gradient(
+        180deg,
+        rgba(235, 235, 235, 0.692) 58%,
+        var(--accent-color) 0%
+      );
       h3 {
         max-width: 40vw;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
       }
-      .start {
-        margin-top: 64px;
-        margin-bottom: 64px;
+      .intro {
+        margin: 0 64px;
+        ion-button {
+          &.start {
+            width: 30%;
+          }
+          &.learn {
+            width: 35%;
+          }
+        }
       }
     }
   }

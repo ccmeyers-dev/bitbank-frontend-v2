@@ -29,13 +29,7 @@ const More: React.FC = () => {
         <IonRouterLink routerLink="/home" routerDirection="root">
           <h1>{config.name}</h1>
         </IonRouterLink>
-        <IonButton
-          routerLink="/auth/register"
-          mode="ios"
-          size="small"
-          fill="outline"
-          className="register"
-        >
+        <IonButton routerLink="/auth/register" mode="ios" className="register">
           <p>Register</p>
         </IonButton>
       </div>

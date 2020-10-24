@@ -33,13 +33,7 @@ const Home: React.FC = () => {
       <div className="image_bg"></div>
       <div className="head">
         <h1>{config.name}</h1>
-        <IonButton
-          routerLink="/auth/register"
-          mode="ios"
-          size="small"
-          fill="outline"
-          className="register"
-        >
+        <IonButton routerLink="/auth/register" mode="ios" className="register">
           <p>Register</p>
         </IonButton>
       </div>
@@ -52,16 +46,16 @@ const Home: React.FC = () => {
 
       <h3>Trade and Invest in Bitcoin, Ethereum, Litecoin and XRP</h3>
 
-      <div className="start">
-        <IonButton routerLink="/home/more" mode="ios" className="learn">
-          <p>Learn More</p>
-        </IonButton>
+      <div className="intro">
         <IonButton
           routerLink={visited ? "/auth/login" : "/auth/register"}
           mode="ios"
           className="start"
         >
           <p>Get Started</p>
+        </IonButton>
+        <IonButton routerLink="/home/more" mode="ios" className="learn">
+          <p>Learn More</p>
         </IonButton>
       </div>
       <div className="list">
