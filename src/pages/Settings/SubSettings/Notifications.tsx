@@ -16,6 +16,7 @@ import { arrowBack, mailOpen, mail } from "ionicons/icons";
 import useSecureRequest from "../../../Hooks/SecureRequest";
 import Refresher from "../../../components/utils/Refresher";
 import { Link } from "react-router-dom";
+import { fullDate } from "../../../components/utils/Utils";
 
 const Notifications: React.FC = () => {
   const { goBack } = useContext(NavContext);
@@ -58,7 +59,7 @@ const Notifications: React.FC = () => {
                       <div
                         className={notification.read ? "read" : "unread"}
                       ></div>
-                      <p>{notification.created}</p>
+                      <p>{fullDate(notification.date_created)}</p>
                     </IonLabel>
                   </IonItem>
                 </Link>

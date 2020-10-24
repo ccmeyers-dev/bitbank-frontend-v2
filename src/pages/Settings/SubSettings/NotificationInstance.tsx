@@ -13,7 +13,13 @@ import { LoadingList } from "../../../components/ListLoader";
 import axiosInstance from "../../../services/baseApi";
 import { mutate } from "swr";
 
-const toggleStatus = (status: boolean, read: boolean, id: number, cb?: any) => {
+const toggleStatus = (
+  status: boolean,
+  read: boolean,
+  id: number,
+  date_created: string,
+  cb?: any
+) => {
   if (read === status) {
     // console.log("duplicate")
     return;
@@ -21,6 +27,7 @@ const toggleStatus = (status: boolean, read: boolean, id: number, cb?: any) => {
   axiosInstance
     .patch(`/users/notifications/${id}/`, {
       read: status,
+      date_created,
     })
     .then((res) => {
       mutate("/users/notifications/");
@@ -50,7 +57,7 @@ const NotificationInstance: React.FC = () => {
       history.replace("/tx/notifications");
     }
     if (notification) {
-      toggleStatus(true, notification.read, id);
+      toggleStatus(true, notification.read, id, notification.date_created);
       // console.log("rendering");
     }
   }, [notification, id, state, history]);
@@ -81,6 +88,7 @@ const NotificationInstance: React.FC = () => {
                       false,
                       notification.read,
                       id,
+                      notification.date_created,
                       goBack("/en/settings")
                     )
                   }

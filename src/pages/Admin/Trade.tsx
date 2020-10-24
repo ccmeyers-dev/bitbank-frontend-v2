@@ -515,7 +515,6 @@ const Trade = () => {
                           }));
                         }}
                       />
-                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>

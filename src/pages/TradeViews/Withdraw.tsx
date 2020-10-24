@@ -327,6 +327,7 @@ const Withdraw: React.FC = () => {
             amount: withdrawAmount,
             completed: false,
             portfolio: profile?.id,
+            date_created: null,
           })
           .then((res) => {
             setResponseAmount(res.data.amount);
