@@ -1,6 +1,6 @@
 export const config = {
-  name: "BitMax",
-  short_name: "Bitmax",
-  site_name: "bitmax",
+  name: "Steem Trade",
+  short_name: "Steem",
+  site_name: "steemtrade",
   location: "Luxembourg, CA",
 };

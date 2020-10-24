@@ -12,6 +12,7 @@ import { useParams, useLocation, useHistory } from "react-router";
 import { LoadingList } from "../../../components/ListLoader";
 import axiosInstance from "../../../services/baseApi";
 import { mutate } from "swr";
+import { fullDate } from "../../../components/utils/Utils";
 
 const toggleStatus = (status: boolean, read: boolean, id: number, cb?: any) => {
   if (read === status) {
@@ -27,7 +28,7 @@ const toggleStatus = (status: boolean, read: boolean, id: number, cb?: any) => {
       mutate("/users/profile/");
     })
     .catch((err) => {
-      //   console.log(err.response);
+      console.log(err.response);
     });
   if (cb) {
     cb();
@@ -71,6 +72,7 @@ const NotificationInstance: React.FC = () => {
             <div className="content">
               <IonListHeader lines="none">
                 <h1>{notification.title}</h1>
+                <p>{fullDate(notification.date_created)}</p>
               </IonListHeader>
               <p className="message">{notification.message}</p>
               {notification.read && (

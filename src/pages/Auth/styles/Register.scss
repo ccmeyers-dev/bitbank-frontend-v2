@@ -7,9 +7,9 @@
       ion-icon {
         font-size: 64px;
       }
-      h3 {
+      h1 {
         text-align: center;
-        font-weight: bold;
+        font-weight: 600;
         font-size: 24px;
       }
     }
@@ -24,7 +24,7 @@
           ion-col {
             ion-input {
               --background: rgba(184, 184, 184, 0.212);
-              border-radius: 16px;
+              border-radius: 24px;
               margin: 4px auto;
               --padding-top: 14px;
               --padding-bottom: 14px;
@@ -33,7 +33,7 @@
               font-size: 14px;
             }
             ion-select {
-              border-radius: 16px;
+              border-radius: 24px;
               background-color: rgba(184, 184, 184, 0.212);
               margin: 4px auto;
               --padding-top: 14px;
@@ -56,10 +56,10 @@
     .button {
       padding: 4px;
       ion-button {
-        --background: var(--dark-purple);
-        --background-activated: var(--dark-purple-active);
-        --background-hover: var(--dark-purple-active);
-        --border-radius: 8px;
+        --background: var(--dark-blue);
+        --background-activated: var(--dark-blue);
+        --background-hover: var(--dark-blue);
+        --border-radius: 36px;
         --padding-top: 30px;
         --padding-bottom: 30px;
         p {
@@ -75,7 +75,7 @@
       margin-top: 24px;
       text-align: center;
       ion-router-link {
-        color: rgb(74, 148, 233);
+        color: var(--light-blue);
         font-weight: 600;
       }
     }

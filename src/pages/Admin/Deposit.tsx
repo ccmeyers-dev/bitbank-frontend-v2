@@ -281,7 +281,6 @@ const Deposit = () => {
                           }));
                         }}
                       />
-                      <p>Amount</p>
                     </IonCol>
                   </IonRow>
                   <IonRow>
@@ -297,7 +296,6 @@ const Deposit = () => {
                           }));
                         }}
                       />
-                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
@@ -390,7 +388,6 @@ const Deposit = () => {
                           }));
                         }}
                       />
-                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>

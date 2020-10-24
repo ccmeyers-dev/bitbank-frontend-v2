@@ -148,6 +148,17 @@
           --padding-start: 20px;
           --placeholder-font-weight: 500;
         }
+
+        ion-datetime {
+          background: rgba(185, 185, 185, 0.171);
+          border-radius: 48px;
+          margin: 12px auto;
+          --padding-top: 16px;
+          --padding-bottom: 16px;
+          --padding-start: 20px;
+          --padding-end: 10px;
+          --placeholder-font-weight: 500;
+        }
       }
       .button {
         @include flex(center);

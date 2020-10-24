@@ -14,6 +14,18 @@
     padding: 16px;
     max-width: 800px;
     margin: auto;
+    ion-list-header {
+      @include flex(space-between);
+      width: 100%;
+      h1 {
+        font-size: 24px;
+        margin-right: auto;
+      }
+      p {
+        font-size: 11px;
+        margin-left: auto;
+      }
+    }
     .message {
       padding: 12px;
       font-weight: 400;
