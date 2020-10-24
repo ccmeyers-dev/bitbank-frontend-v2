@@ -17,12 +17,12 @@ const HistoryListItem: React.FC<TransactionListProp> = ({ tx, toggleShow }) => {
       </div>
       <IonLabel className="description">
         <h3>
-          {tx.type === "withdrawal" ? "Withdrawal" : `${tx.wallet} wallet`}
+          {tx.type === "withdrawal" ? "Withdrawal" : `${tx.wallet} Wallet`}
         </h3>
         <p>
           {tx.current
-            ? tx.current.toFixed(4) + " USD"
-            : tx.amount.toFixed(4) + " USD"}
+            ? tx.current.toFixed(2) + " USD"
+            : tx.amount.toFixed(2) + " USD"}
         </p>
       </IonLabel>
       <IonLabel className="amount">

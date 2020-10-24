@@ -19,6 +19,7 @@ import {
   IonToast,
   IonText,
   IonTextarea,
+  IonDatetime,
 } from "@ionic/react";
 import Refresher from "../../components/utils/Refresher";
 import { arrowBack, closeCircle, mail, mailOpen } from "ionicons/icons";
@@ -28,12 +29,14 @@ import { LoadingList } from "../../components/ListLoader";
 import { useParams } from "react-router";
 import useSecureRequest from "../../Hooks/SecureRequest";
 import { mutate } from "swr";
+import { fullDate } from "../../components/utils/Utils";
 
 interface AddNotificationItem {
   title: string | null;
   message: string | null;
   read: false;
   portfolio: number | null;
+  date_created: string | null;
 }
 
 const InitialAddNotification: AddNotificationItem = {
@@ -41,6 +44,7 @@ const InitialAddNotification: AddNotificationItem = {
   message: null,
   read: false,
   portfolio: null,
+  date_created: null,
 };
 
 interface NotificationItem {
@@ -49,6 +53,7 @@ interface NotificationItem {
   message: string | null;
   read: false;
   portfolio: number | null;
+  date_created: string | null;
 }
 
 const InitialNotification: NotificationItem = {
@@ -57,6 +62,7 @@ const InitialNotification: NotificationItem = {
   message: null,
   read: false,
   portfolio: null,
+  date_created: null,
 };
 
 const Notification = () => {
@@ -238,7 +244,10 @@ const Notification = () => {
                   className="NotificationItem ion-no-padding"
                 >
                   <div className="icon">
-                    <IonIcon icon={notification.read ? mailOpen : mail} />
+                    <IonIcon
+                      icon={notification.read ? mailOpen : mail}
+                      color={!notification.read ? "medium" : "primary"}
+                    />
                   </div>
                   <IonLabel className="description">
                     <h3>{notification.title}</h3>
@@ -246,7 +255,7 @@ const Notification = () => {
                   </IonLabel>
                   <IonLabel className="amount">
                     <h5>{notification.read ? "Read" : "Unread"}</h5>
-                    <p>status</p>
+                    <p>{fullDate(notification.date_created!)}</p>
                   </IonLabel>
                 </IonItem>
               ))
@@ -278,7 +287,10 @@ const Notification = () => {
           <IonContent>
             <div className="details">
               <div className="title">
-                <p>{selectNotification.title}</p>
+                <p>
+                  {selectNotification.title} -{" "}
+                  {fullDate(selectNotification.date_created!)}
+                </p>
               </div>
               <div className="message">
                 <p className="body">{selectNotification.message}</p>
@@ -312,6 +324,21 @@ const Notification = () => {
                           setSelectNotification((current) => ({
                             ...current,
                             message: e.detail.value!,
+                          }));
+                        }}
+                      />
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={selectNotification.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setSelectNotification((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
                           }));
                         }}
                       />
@@ -386,6 +413,21 @@ const Notification = () => {
                           setAddNotification((current) => ({
                             ...current,
                             message: e.detail.value!,
+                          }));
+                        }}
+                      />
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={addNotification.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setAddNotification((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
                           }));
                         }}
                       />

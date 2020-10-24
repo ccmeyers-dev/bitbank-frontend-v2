@@ -54,3 +54,12 @@ export const getInitials = (fullname: string) => {
   }
   return initials;
 };
+
+export const initialize = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
+
+export const fullDate = (ISOdate: string) => {
+  const fullDate = new Date(ISOdate);
+  const date = fullDate.toLocaleDateString("en-US");
+  return date;
+};

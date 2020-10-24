@@ -20,6 +20,7 @@ import {
   IonSelectOption,
   IonSelect,
   IonText,
+  IonDatetime,
 } from "@ionic/react";
 import Refresher from "../../components/utils/Refresher";
 import { arrowBack, swapHorizontal, closeCircle } from "ionicons/icons";
@@ -30,6 +31,7 @@ import { useParams } from "react-router";
 import { useWallets } from "../../Hooks/WalletsHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
 import { mutate } from "swr";
+import { fullDate } from "../../components/utils/Utils";
 
 interface AddTradeItem {
   amount: number | null;
@@ -38,6 +40,7 @@ interface AddTradeItem {
   duration: number | null;
   portfolio: number | null;
   wallet: number | null;
+  date_created: string | null;
 }
 
 const InitialAddTrade: AddTradeItem = {
@@ -47,6 +50,7 @@ const InitialAddTrade: AddTradeItem = {
   duration: null,
   portfolio: null,
   wallet: null,
+  date_created: null,
 };
 
 interface TradeItem {
@@ -58,6 +62,7 @@ interface TradeItem {
   profit: number;
   type: string;
   wallet: number;
+  date_created: string | null;
 }
 
 const InitialTrade: TradeItem = {
@@ -69,6 +74,7 @@ const InitialTrade: TradeItem = {
   profit: 0,
   type: "",
   wallet: 0,
+  date_created: null,
 };
 
 const Trade = () => {
@@ -113,6 +119,7 @@ const Trade = () => {
           // console.log(res.data);
           setShowAddTradeModal(false);
           setShowAddToast(true);
+          setAddTrade(InitialAddTrade);
           update();
           mutate(`/users/profile/?id=${userId}`);
         })
@@ -132,7 +139,7 @@ const Trade = () => {
     axiosInstance
       .put(`/users/trades/${selectTrade.id}/`, selectTrade)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         setShowTradeModal(false);
         setShowToast(true);
         update();
@@ -226,8 +233,8 @@ const Trade = () => {
                     </p>
                   </IonLabel>
                   <IonLabel className="amount">
-                    <h5>{trade.profit} USD</h5>
-                    <p>{trade.current.toFixed(4)} USD</p>
+                    <h5>{trade.current.toFixed(2)} USD</h5>
+                    <p>{fullDate(trade.date_created!)}</p>
                   </IonLabel>
                 </IonItem>
               ))
@@ -264,8 +271,12 @@ const Trade = () => {
                 <p>{selectTrade.amount} USD</p>
               </div>
               <div className="entry">
+                <p>Wallet:</p>
+                <p>{selectTrade.wallet}</p>
+              </div>
+              <div className="entry">
                 <p>Duration:</p>
-                <p>{selectTrade.duration}</p>
+                <p>{selectTrade.duration} Days</p>
               </div>
               <div className="entry">
                 <p>Profit:</p>
@@ -274,6 +285,10 @@ const Trade = () => {
               <div className="entry">
                 <p>Current:</p>
                 <p>{selectTrade.current?.toFixed(4)}</p>
+              </div>
+              <div className="entry">
+                <p>Date:</p>
+                <p>{fullDate(selectTrade.date_created!)}</p>
               </div>
             </div>
             <div className="input">
@@ -284,7 +299,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Capital"
-                        clearInput
                         value={selectTrade.amount}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -305,7 +319,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Duration"
-                        clearInput
                         value={selectTrade.duration}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -324,7 +337,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Profit"
-                        clearInput
                         value={selectTrade.profit}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -338,6 +350,23 @@ const Trade = () => {
                         }}
                       />
                       <p>Profit</p>
+                    </IonCol>
+                  </IonRow>
+
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={selectTrade.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setSelectTrade((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
+                          }));
+                        }}
+                      />
+                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
@@ -380,7 +409,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Capital"
-                        clearInput
                         value={addTrade.amount}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -400,7 +428,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Duration"
-                        clearInput
                         value={addTrade.duration}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -418,7 +445,6 @@ const Trade = () => {
                       <IonInput
                         type="number"
                         placeholder="Profit"
-                        clearInput
                         value={addTrade.profit}
                         onIonChange={(e) => {
                           let value = parseFloat(e.detail.value!);
@@ -474,6 +500,22 @@ const Trade = () => {
                             </IonSelectOption>
                           ))}
                       </IonSelect>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={addTrade.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setAddTrade((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
+                          }));
+                        }}
+                      />
+                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>

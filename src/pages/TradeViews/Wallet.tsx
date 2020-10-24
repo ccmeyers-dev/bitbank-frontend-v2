@@ -27,6 +27,7 @@ import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
 import FullSpinner from "../../components/FullSpinner";
+import { initialize } from "../../components/utils/Utils";
 
 const Wallet: React.FC = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -54,7 +55,7 @@ const Wallet: React.FC = () => {
       setDetail(tx);
       setShowDetail(true);
     } else if (tx.type === "deposit" || tx.type === "withdrawal") {
-      transactionToast(tx.amount, tx.type);
+      transactionToast(tx.amount, initialize(tx.type));
     }
   };
 

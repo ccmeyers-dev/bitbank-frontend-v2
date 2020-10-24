@@ -4,6 +4,7 @@ import "./styles/TransactionDetailModal.scss";
 import { TransactionHeader } from "./TransactionHeader";
 import { TransactionDetailList } from "./TransactionList";
 import { TransactionModalProp } from "../Interfaces/Transaction";
+import { fullDate } from "./utils/Utils";
 
 const TransactionDetailModal: React.FC<TransactionModalProp | null> = ({
   tx,
@@ -44,6 +45,10 @@ const TransactionDetailModal: React.FC<TransactionModalProp | null> = ({
           <div className="entry">
             <p>Capital:</p>
             <p>{tx?.amount?.toFixed(2)}</p>
+          </div>
+          <div className="entry">
+            <p>Date:</p>
+            <p>{fullDate(tx?.date_created)}</p>
           </div>
         </div>
         <div className="tx">

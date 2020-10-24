@@ -20,6 +20,7 @@ import {
   IonSelectOption,
   IonSelect,
   IonText,
+  IonDatetime,
 } from "@ionic/react";
 import Refresher from "../../components/utils/Refresher";
 import { arrowBack, arrowDown, closeCircle } from "ionicons/icons";
@@ -30,17 +31,20 @@ import { useParams } from "react-router";
 import { useWallets } from "../../Hooks/WalletsHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
 import { mutate } from "swr";
+import { fullDate } from "../../components/utils/Utils";
 
 interface AddDepositItem {
   amount: number | null;
   portfolio: number | null;
   wallet: number | null;
+  date_created: string | null;
 }
 
 const InitialAddDeposit: AddDepositItem = {
   amount: null,
   portfolio: null,
   wallet: null,
+  date_created: null,
 };
 
 interface DepositItem {
@@ -48,6 +52,7 @@ interface DepositItem {
   amount: number;
   portfolio: number;
   wallet: number;
+  date_created: string | null;
 }
 
 const InitialDeposit: DepositItem = {
@@ -55,6 +60,7 @@ const InitialDeposit: DepositItem = {
   amount: 0,
   portfolio: 0,
   wallet: 0,
+  date_created: null,
 };
 
 const Deposit = () => {
@@ -213,7 +219,7 @@ const Deposit = () => {
                   </IonLabel>
                   <IonLabel className="amount">
                     <h5>{getWallet(deposit.wallet)}</h5>
-                    <p>wallet</p>
+                    <p>{fullDate(deposit.date_created!)}</p>
                   </IonLabel>
                 </IonItem>
               ))
@@ -249,6 +255,10 @@ const Deposit = () => {
                 <p>Amount:</p>
                 <p>{selectDeposit.amount} USD</p>
               </div>
+              <div className="entry">
+                <p>Date:</p>
+                <p>{fullDate(selectDeposit.date_created!)}</p>
+              </div>
             </div>
             <div className="input">
               <div className="input-box">
@@ -272,6 +282,22 @@ const Deposit = () => {
                         }}
                       />
                       <p>Amount</p>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={selectDeposit.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setSelectDeposit((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
+                          }));
+                        }}
+                      />
+                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
@@ -349,6 +375,22 @@ const Deposit = () => {
                             </IonSelectOption>
                           ))}
                       </IonSelect>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={addDeposit.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setAddDeposit((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
+                          }));
+                        }}
+                      />
+                      <p>Date Created</p>
                     </IonCol>
                   </IonRow>
                 </IonGrid>

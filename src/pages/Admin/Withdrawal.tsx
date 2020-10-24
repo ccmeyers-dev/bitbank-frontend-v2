@@ -20,6 +20,7 @@ import {
   IonSelectOption,
   IonSelect,
   IonText,
+  IonDatetime,
 } from "@ionic/react";
 import Refresher from "../../components/utils/Refresher";
 import { arrowBack, arrowUp, closeCircle } from "ionicons/icons";
@@ -29,12 +30,14 @@ import { LoadingList } from "../../components/ListLoader";
 import { useParams } from "react-router";
 import { useWallets } from "../../Hooks/WalletsHook";
 import useSecureRequest from "../../Hooks/SecureRequest";
+import { fullDate } from "../../components/utils/Utils";
 
 interface AddWithdrawalItem {
   completed: boolean;
   amount: number | null;
   portfolio: number | null;
   wallet: string;
+  date_created: string | null;
 }
 
 const InitialAddWithdrawal: AddWithdrawalItem = {
@@ -42,6 +45,7 @@ const InitialAddWithdrawal: AddWithdrawalItem = {
   amount: null,
   portfolio: null,
   wallet: "",
+  date_created: null,
 };
 
 interface AddBillingsItem {
@@ -70,6 +74,7 @@ interface WithdrawalItem {
   portfolio: number;
   wallet: string;
   billings: BillingsItem[];
+  date_created: string | null;
 }
 
 const InitialWithdrawal: WithdrawalItem = {
@@ -79,6 +84,7 @@ const InitialWithdrawal: WithdrawalItem = {
   portfolio: 0,
   wallet: "",
   billings: [],
+  date_created: null,
 };
 
 const Withdrawal = () => {
@@ -308,6 +314,10 @@ const Withdrawal = () => {
                 <p>Amount:</p>
                 <p>{selectWithdrawal.amount} USD</p>
               </div>
+              <div className="entry">
+                <p>Date:</p>
+                <p>{fullDate(selectWithdrawal.date_created!)}</p>
+              </div>
               <div className="billings">
                 {selectWithdrawal.billings.length > 0 ? (
                   <>
@@ -447,6 +457,21 @@ const Withdrawal = () => {
                             </IonSelectOption>
                           ))}
                       </IonSelect>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      <IonDatetime
+                        value={addWithdrawal.date_created}
+                        placeholder="Leave blank for default"
+                        pickerFormat="MMM DD, YYYY HH:mm"
+                        onIonChange={(e) => {
+                          setAddWithdrawal((current) => ({
+                            ...current,
+                            date_created: e.detail.value!,
+                          }));
+                        }}
+                      />
                     </IonCol>
                   </IonRow>
                 </IonGrid>
