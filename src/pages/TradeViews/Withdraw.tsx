@@ -259,7 +259,7 @@ const Withdraw: React.FC = () => {
 
   const { goBack } = useContext(NavContext);
 
-  const { symbol } = useParams();
+  const { symbol }: any = useParams();
 
   const { data: profile } = useProfile();
   const { data: wallets } = useWallets();

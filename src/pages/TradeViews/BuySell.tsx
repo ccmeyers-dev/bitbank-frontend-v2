@@ -20,6 +20,7 @@ import { WalletProp } from "../../Interfaces/Wallet";
 import { useWallets } from "../../Hooks/WalletsHook";
 import { useProfile } from "../../Hooks/ProfileHook";
 import { mutate } from "swr";
+import useSecureRequest from "../../Hooks/SecureRequest";
 
 const BuySell: React.FC = () => {
   const [mainValue, setMainValue] = useState<string>("0");
@@ -51,7 +52,7 @@ const BuySell: React.FC = () => {
     setMainValue(newValue);
   };
 
-  const { wallet, order } = useParams();
+  const { wallet, order }: any = useParams();
 
   const { data: profile, update } = useProfile();
 
@@ -112,9 +113,36 @@ const BuySell: React.FC = () => {
     update();
     return toast.present();
   };
+
+  const { data: allWithdrawals } = useSecureRequest(
+    "/users/withdrawals/"
+  );
+
+  const pendingWithdrawal = () => {
+    const walletWithdrawals = allWithdrawals.filter(
+      (w: any) => w.wallet.toLowerCase() === wallet
+    );
+    const isPending = walletWithdrawals.some(
+      (w: any) => w.completed === false
+    );
+    return isPending;
+  };
+
+  const pendingWithdrawalToast = async () => {
+    const toast = document.createElement("ion-toast");
+    toast.message = "You have a pending withdrawal, please wait...";
+    toast.duration = 4000;
+
+    document.body.appendChild(toast);
+    return toast.present();
+  };
+
   const handleSubmit = () => {
     if (main < 100) {
       setShowToast(true);
+    }
+    else if (pendingWithdrawal()){
+      pendingWithdrawalToast()
     } else {
       axiosInstance
         .post("users/add-trades/", {
