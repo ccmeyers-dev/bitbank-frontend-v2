@@ -17,6 +17,8 @@ import "./styles/Dashboard.scss";
 import { ErrorList, LoadingList } from "../../components/ListLoader";
 import { config } from "../../app.config";
 import useSecureRequest from "../../Hooks/SecureRequest";
+import useSearchRequest from "../../Hooks/SearchRequest";
+import { useDebounce } from "../../Hooks/Debounce";
 
 interface UserProp {
   account: {
@@ -82,20 +84,22 @@ const Dashboard: React.FC = () => {
 
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const { data: users, error } = useSecureRequest("/users/portfolios/");
+  const debouncedValue = useDebounce(searchValue, 1500)
+  const { data: users, error } = useSearchRequest("/users/portfolios/", debouncedValue);
   const { data: admin } = useSecureRequest("/users/admin/");
 
-  let results: UserProp[];
+  // let results: UserProp[];
 
-  if (searchValue.length > 3) {
-    results = users.filter(
-      (user: any) =>
-        user.full_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        user.account.email.toLowerCase().includes(searchValue.toLowerCase())
-    );
-  } else {
-    results = users;
-  }
+  // if (searchValue.length > 3) {
+  //   results = users.filter(
+  //     (user: any) =>
+  //       user.full_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+  //       user.account.email.toLowerCase().includes(searchValue.toLowerCase())
+  //   );
+  // } else {
+  //   results = users;
+  // }
+
 
   return (
     <IonPage>
@@ -170,8 +174,8 @@ const Dashboard: React.FC = () => {
           <LoadingList />
         ) : (
           <IonList mode="ios">
-            {results.length > 0 ? (
-              results.map((user) => (
+            {users.length > 0 ? (
+              users.map((user: UserProp) => (
                 <UserItem
                   key={user.trader_id}
                   id={user.id}
