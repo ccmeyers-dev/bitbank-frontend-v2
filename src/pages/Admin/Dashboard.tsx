@@ -14,7 +14,7 @@ import {
 import { arrowBack, person } from "ionicons/icons";
 import Refresher from "../../components/utils/Refresher";
 import "./styles/Dashboard.scss";
-import { LoadingList } from "../../components/ListLoader";
+import { ErrorList, LoadingList } from "../../components/ListLoader";
 import { config } from "../../app.config";
 import useSecureRequest from "../../Hooks/SecureRequest";
 
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
 
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const { data: users } = useSecureRequest("/users/portfolios/");
+  const { data: users, error } = useSecureRequest("/users/portfolios/");
   const { data: admin } = useSecureRequest("/users/admin/");
 
   let results: UserProp[];
@@ -166,6 +166,7 @@ const Dashboard: React.FC = () => {
           />
         </div>
         {!users ? (
+          error ? <ErrorList/> :
           <LoadingList />
         ) : (
           <IonList mode="ios">
